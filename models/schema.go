@@ -1,6 +1,8 @@
-package model
+package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Session struct {
 	gorm.Model
@@ -65,3 +67,9 @@ type User struct {
 	Password string `gorm:"not null"`
 	Role     int    `gorm:"not null"`
 }
+
+const (
+	LCP = "LCP"
+	CLS = "CLS"
+	FID = "FID"
+)
