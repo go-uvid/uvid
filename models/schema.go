@@ -23,7 +23,10 @@ type Session struct {
 
 type JSError struct {
 	gorm.Model
-	Error string `gorm:"not null"`
+	Name    string `gorm:"not null"`
+	Message string `gorm:"not null"`
+	Stack   string `gorm:"not null"`
+	Cause   string
 
 	SessionID uint `gorm:"not null"`
 	Session   Session

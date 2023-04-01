@@ -28,6 +28,10 @@ func New(dsn string) *Dao {
 	}
 }
 
+func NewInMemoryDao() *Dao {
+	return New(":memory:")
+}
+
 func (dao *Dao) DB() *gorm.DB {
 	return dao.db
 }
