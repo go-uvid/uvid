@@ -18,7 +18,7 @@ func New(dsn string) *Dao {
 		panic(err)
 	}
 
-	err = db.AutoMigrate(&models.User{}, &models.Session{}, &models.Event{}, &models.PerformanceMetric{}, &models.HTTPMetric{}, &models.JSError{})
+	err = db.AutoMigrate(&models.User{}, &models.Session{}, &models.Event{}, &models.PerformanceSpan{}, &models.HTTPSpan{}, &models.JSError{})
 	if err != nil {
 		panic(err)
 	}

@@ -15,10 +15,10 @@ type Session struct {
 	Referrer   string
 	Meta       string
 
-	JSErrors    []JSError
-	HTTPMetrics []HTTPMetric
-	Events      []Event
-	PerfMetrics []PerformanceMetric
+	JSErrors        []JSError
+	HTTPSpan        []HTTPSpan
+	Events          []Event
+	PerformanceSpan []PerformanceSpan
 }
 
 type JSError struct {
@@ -32,7 +32,7 @@ type JSError struct {
 	Session   Session
 }
 
-type HTTPMetric struct {
+type HTTPSpan struct {
 	gorm.Model
 	URL      string `gorm:"not null"`
 	Method   string `gorm:"not null"`
@@ -54,7 +54,7 @@ type Event struct {
 	Session   Session
 }
 
-type PerformanceMetric struct {
+type PerformanceSpan struct {
 	gorm.Model
 	Name  string  `gorm:"not null"`
 	Value float64 `gorm:"not null"`

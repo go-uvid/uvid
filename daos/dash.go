@@ -9,7 +9,7 @@ import (
 
 func (dao *Dao) FindPageViewCount(db *gorm.DB) int64 {
 	var count int64
-	db.Model(models.PerformanceMetric{}).
+	db.Model(models.PerformanceSpan{}).
 		Where("name = ?", models.LCP).
 		Count(&count)
 	return count
@@ -29,8 +29,8 @@ const dayAndUniqueCountColumn = "strftime('%Y-%m-%d', datetime(created_at, 'loca
 func (dao *Dao) FindPageViewInterval(db *gorm.DB, byHour bool) []IntervalData {
 	var results []IntervalData
 
-	// Build the query to group by hour, count distinct sessions with LCP metric
-	db.Model(&models.PerformanceMetric{}).
+	// Build the query to group by hour, count distinct sessions with LCP span
+	db.Model(&models.PerformanceSpan{}).
 		Select(tools.Ternary(byHour, hourAndCountColumn, dayAndCountColumn)).
 		Where("name = ?", models.LCP).
 		Group("x").
@@ -43,8 +43,8 @@ func (dao *Dao) FindPageViewInterval(db *gorm.DB, byHour bool) []IntervalData {
 func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, byHour bool) []IntervalData {
 	var results []IntervalData
 
-	// Build the query to group by hour, count distinct sessions with LCP metric
-	db.Model(&models.PerformanceMetric{}).
+	// Build the query to group by hour, count distinct sessions with LCP span
+	db.Model(&models.PerformanceSpan{}).
 		Select(tools.Ternary(byHour, hourAndUniqueCountColumn, dayAndUniqueCountColumn)).
 		Where("name = ?", models.LCP).
 		Group("x").
@@ -55,17 +55,17 @@ func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, byHour bool) []IntervalDa
 
 func (dao *Dao) FindUniqueVisitorCount(db *gorm.DB) int64 {
 	var count int64
-	db.Model(models.PerformanceMetric{}).
+	db.Model(models.PerformanceSpan{}).
 		Distinct("session_id").
 		Where("name = ?", models.LCP).
 		Count(&count)
 	return count
 }
 
-// findAveragePerformance returns the average performance metrics in the given time range
+// findAveragePerformance returns the average performance spans in the given time range
 func (dao *Dao) FindAveragePerformanceInterval(db *gorm.DB) []IntervalData {
 	var results []IntervalData
-	db.Model(&models.PerformanceMetric{}).
+	db.Model(&models.PerformanceSpan{}).
 		Select("name as x, AVG(value) as y").
 		Group("name").
 		Scan(&results)
@@ -103,7 +103,7 @@ func (dao *Dao) FindJSErrorInterval(db *gorm.DB, byHour bool) []IntervalData {
 
 func (dao *Dao) FindHTTPErrorCount(db *gorm.DB) int64 {
 	var count int64
-	db.Model(models.HTTPMetric{}).Where("status < ? or status > ?", 200, 299).Count(&count)
+	db.Model(models.HTTPSpan{}).Where("status < ? or status > ?", 200, 299).Count(&count)
 	return count
 }
 
@@ -111,7 +111,7 @@ func (dao *Dao) FindHTTPErrorCount(db *gorm.DB) int64 {
 func (dao *Dao) FindHTTPErrorInterval(db *gorm.DB, byHour bool) []IntervalData {
 	var results []IntervalData
 
-	db.Model(&models.HTTPMetric{}).
+	db.Model(&models.HTTPSpan{}).
 		Select(tools.Ternary(byHour, hourAndCountColumn, dayAndCountColumn)).
 		Where("status < ? or status > ?", 200, 299).
 		Group("x").
