@@ -1,24 +1,26 @@
 package models
 
 import (
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Session struct {
 	gorm.Model
-	UA         string `gorm:"not null"`
-	Language   string `gorm:"not null"`
-	IP         string `gorm:"not null"`
+	UUID       uuid.UUID `gorm:"uniqueIndex;type:byte"`
+	UA         string    `gorm:"not null"`
+	Language   string    `gorm:"not null"`
+	IP         string    `gorm:"not null"`
 	AppVersion string
 	URL        string `gorm:"not null"`
 	Screen     string `gorm:"not null"`
 	Referrer   string
 	Meta       string
 
-	JSErrors        []JSError
-	HTTPSpan        []HTTPSpan
-	Events          []Event
-	PerformanceSpan []PerformanceSpan
+	JSErrors        []JSError         `gorm:"foreignKey:SessionUUID"`
+	HTTPSpan        []HTTPSpan        `gorm:"foreignKey:SessionUUID"`
+	Events          []Event           `gorm:"foreignKey:SessionUUID"`
+	PerformanceSpan []PerformanceSpan `gorm:"foreignKey:SessionUUID"`
 }
 
 type JSError struct {
@@ -28,8 +30,8 @@ type JSError struct {
 	Stack   string `gorm:"not null"`
 	Cause   string
 
-	SessionID uint `gorm:"not null"`
-	Session   Session
+	SessionUUID uuid.UUID `gorm:"not null"`
+	Session     Session   `gorm:"references:UUID"`
 }
 
 type HTTPSpan struct {
@@ -41,8 +43,8 @@ type HTTPSpan struct {
 	Status   int    `gorm:"not null"`
 	Response string
 
-	SessionID uint `gorm:"not null"`
-	Session   Session
+	SessionUUID uuid.UUID `gorm:"not null"`
+	Session     Session   `gorm:"references:UUID"`
 }
 
 type Event struct {
@@ -50,8 +52,8 @@ type Event struct {
 	Name  string `gorm:"not null"`
 	Value string `gorm:"not null"`
 
-	SessionID uint `gorm:"not null"`
-	Session   Session
+	SessionUUID uuid.UUID `gorm:"not null"`
+	Session     Session   `gorm:"references:UUID"`
 }
 
 type PerformanceSpan struct {
@@ -60,8 +62,8 @@ type PerformanceSpan struct {
 	Value float64 `gorm:"not null"`
 	URL   string  `gorm:"not null"`
 
-	SessionID uint `gorm:"not null"`
-	Session   Session
+	SessionUUID uuid.UUID `gorm:"not null"`
+	Session     Session   `gorm:"references:UUID"`
 }
 
 type User struct {

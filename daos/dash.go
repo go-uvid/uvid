@@ -22,8 +22,8 @@ type IntervalData struct {
 
 const hourAndCountColumn = "strftime('%Y-%m-%d %H:00:00', datetime(created_at, 'localtime')) as x, COUNT(*) as y"
 const dayAndCountColumn = "strftime('%Y-%m-%d', datetime(created_at, 'localtime')) as x, COUNT(*) as y"
-const hourAndUniqueCountColumn = "strftime('%Y-%m-%d %H:00:00', datetime(created_at, 'localtime')) as x, COUNT(DISTINCT session_id) as y"
-const dayAndUniqueCountColumn = "strftime('%Y-%m-%d', datetime(created_at, 'localtime')) as x, COUNT(DISTINCT session_id) as y"
+const hourAndUniqueCountColumn = "strftime('%Y-%m-%d %H:00:00', datetime(created_at, 'localtime')) as x, COUNT(DISTINCT session_uuid) as y"
+const dayAndUniqueCountColumn = "strftime('%Y-%m-%d', datetime(created_at, 'localtime')) as x, COUNT(DISTINCT session_uuid) as y"
 
 // findPageViews returns the number of page views in the given time range
 func (dao *Dao) FindPageViewInterval(db *gorm.DB, byHour bool) []IntervalData {
@@ -56,7 +56,7 @@ func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, byHour bool) []IntervalDa
 func (dao *Dao) FindUniqueVisitorCount(db *gorm.DB) int64 {
 	var count int64
 	db.Model(models.PerformanceSpan{}).
-		Distinct("session_id").
+		Distinct("session_uuid").
 		Where("name = ?", models.LCP).
 		Count(&count)
 	return count

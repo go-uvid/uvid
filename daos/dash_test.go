@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 )
@@ -17,8 +18,8 @@ func TestFindPageViewInterval(t *testing.T) {
 	results := dao.FindPageViewInterval(dao.TimeRange(time.Time{}, time.Now()), true)
 	assert.Empty(t, results)
 
-	startTime := time.Now().AddDate(0, 0, -1)
-	endTime := time.Now()
+	startTime := truncateToday()
+	endTime := startTime.AddDate(0, 0, 1)
 
 	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 100, Model: gorm.Model{CreatedAt: startTime}})
 	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 200, Model: gorm.Model{CreatedAt: startTime}})
@@ -37,8 +38,8 @@ func TestFindAveragePerformanceInterval(t *testing.T) {
 	db := dao.DB()
 
 	// Create some performance span with different values
-	startTime := time.Now().AddDate(0, 0, -1)
-	endTime := time.Now()
+	startTime := truncateToday()
+	endTime := startTime.AddDate(0, 0, 1)
 	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 100, Model: gorm.Model{CreatedAt: startTime}})
 	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 200, Model: gorm.Model{CreatedAt: endTime}})
 	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 300, Model: gorm.Model{CreatedAt: endTime}})
@@ -58,7 +59,7 @@ func TestFindHTTPErrorInterval(t *testing.T) {
 	db := dao.DB()
 
 	// Create some HTTP span with different statuses
-	startTime := time.Now().AddDate(-1, 2, 3)
+	startTime := truncateToday()
 	db.Create(&models.HTTPSpan{Status: 200, Model: gorm.Model{CreatedAt: startTime}})
 	db.Create(&models.HTTPSpan{Status: 204, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour)}})
 	db.Create(&models.HTTPSpan{Status: 300, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour + time.Minute)}})
@@ -76,18 +77,21 @@ func TestFindHTTPErrorInterval(t *testing.T) {
 }
 
 func TestFindUniqueVisitorInterval(t *testing.T) {
-	dao := daos.New(":memory:")
+	dao := daos.NewInMemoryDao()
 	db := dao.DB()
 
 	// Create some performance span with different session ids
-	startTime := time.Now().AddDate(0, 0, -5)
+	startTime := truncateToday()
 	midTime := startTime.AddDate(0, 0, 1)
 	endTime := startTime.AddDate(0, 0, 3)
-	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 100, SessionID: 1, Model: gorm.Model{CreatedAt: startTime}})
-	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 300, SessionID: 1, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour)}})
-	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 200, SessionID: 2, Model: gorm.Model{CreatedAt: midTime}})
-	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 200, SessionID: 3, Model: gorm.Model{CreatedAt: midTime}})
-	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 400, SessionID: 3, Model: gorm.Model{CreatedAt: endTime}})
+	uuid1 := uuid.New()
+	uuid2 := uuid.New()
+	uuid3 := uuid.New()
+	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 100, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: startTime}})
+	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 300, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour)}})
+	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 200, SessionUUID: uuid2, Model: gorm.Model{CreatedAt: midTime}})
+	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 200, SessionUUID: uuid3, Model: gorm.Model{CreatedAt: midTime}})
+	db.Create(&models.PerformanceSpan{Name: models.LCP, Value: 400, SessionUUID: uuid3, Model: gorm.Model{CreatedAt: endTime}})
 
 	// Test by finding the unique visitor interval for the last 2 hours
 	tr := dao.TimeRange(startTime, endTime)
@@ -100,4 +104,8 @@ func TestFindUniqueVisitorInterval(t *testing.T) {
 
 	assert.Equal(t, results[1].X, midTime.Format(time.DateOnly))
 	assert.Equal(t, results[1].Y, int64(2))
+}
+
+func truncateToday() time.Time {
+	return time.Now().Truncate(24 * time.Hour)
 }
