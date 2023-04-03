@@ -13,6 +13,9 @@ func bindSpanApi(server Server) {
 	rg := server.App.Group("/span")
 	rg.POST("/session", api.createSession)
 	rg.POST("/error", api.createError, NewEnsureSessionMiddleware(api))
+	rg.POST("/http", api.createHTTP, NewEnsureSessionMiddleware(api))
+	rg.POST("/event", api.createEvent, NewEnsureSessionMiddleware(api))
+	rg.POST("/performance", api.createPerformance, NewEnsureSessionMiddleware(api))
 }
 
 type spanApi struct {
@@ -28,7 +31,11 @@ func (api *spanApi) createSession(c echo.Context) error {
 		c.Logger().Error(err)
 		return err
 	}
-	sessionUUID := api.server.Dao.CreateSession(sessionDTO)
+	session, err := api.server.Dao.CreateSession(sessionDTO)
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	sessionUUID := session.UUID
 	cookie := http.Cookie{
 		Name:  SessionKey,
 		Value: sessionUUID.String(),
@@ -38,17 +45,49 @@ func (api *spanApi) createSession(c echo.Context) error {
 }
 
 func (api *spanApi) createError(c echo.Context) error {
-	errorDTO := dtos.ErrorDTO{}
-	if err := c.Bind(&errorDTO); err != nil {
-		c.Logger().Error(err)
-		return err
-	}
-	if err := c.Validate(errorDTO); err != nil {
-		c.Logger().Error(err)
+	dto := &dtos.ErrorDTO{}
+	if err := dtos.BindAndValidateDTO(c, dto); err != nil {
 		return err
 	}
 	session := GetSessionUUID(c)
-	api.server.Dao.CreateJSError(session, &errorDTO)
+	_, err := api.server.Dao.CreateJSError(session, dto)
+	return handleDaoAndResponse(c, err)
+}
+
+func (api *spanApi) createHTTP(c echo.Context) error {
+	dto := &dtos.HTTPDTO{}
+	if err := dtos.BindAndValidateDTO(c, &dto); err != nil {
+		return err
+	}
+	session := GetSessionUUID(c)
+	_, err := api.server.Dao.CreateHTTP(session, dto)
+	return handleDaoAndResponse(c, err)
+}
+
+func (api *spanApi) createEvent(c echo.Context) error {
+	dto := &dtos.EventDTO{}
+	if err := dtos.BindAndValidateDTO(c, &dto); err != nil {
+		return err
+	}
+	session := GetSessionUUID(c)
+	_, err := api.server.Dao.CreateEvent(session, dto)
+	return handleDaoAndResponse(c, err)
+}
+
+func (api *spanApi) createPerformance(c echo.Context) error {
+	dto := &dtos.PerformanceDTO{}
+	if err := dtos.BindAndValidateDTO(c, &dto); err != nil {
+		return err
+	}
+	session := GetSessionUUID(c)
+	_, err := api.server.Dao.CreatePerformance(session, dto)
+	return handleDaoAndResponse(c, err)
+}
+
+func handleDaoAndResponse(c echo.Context, err error) error {
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
 	return c.NoContent(http.StatusNoContent)
 }
 

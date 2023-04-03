@@ -14,6 +14,24 @@ type (
 		Stack   string `json:"stack" validate:"required"`
 		Cause   string `json:"cause"`
 	}
+	HTTPDTO struct {
+		URL      string `json:"url" validate:"required"`
+		Method   string `json:"method" validate:"required"`
+		Headers  string `json:"headers" validate:"required"`
+		Status   int    `json:"status"  validate:"required"`
+		Data     string `json:"data"`
+		Response string `json:"response"`
+	}
+	EventDTO struct {
+		Name  string `json:"name" validate:"required"`
+		Value string `json:"value" validate:"required"`
+	}
+	PerformanceDTO struct {
+		Name  string  `json:"name" validate:"required"`
+		Value float64 `json:"value" validate:"required"`
+		URL   string  `json:"url" validate:"required"`
+	}
+
 	BaseSessionDTO struct {
 		AppVersion string `json:"app_version"`
 		URL        string `json:"url" validate:"required"`

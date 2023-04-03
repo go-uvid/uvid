@@ -38,9 +38,9 @@ type HTTPSpan struct {
 	gorm.Model
 	URL      string `gorm:"not null"`
 	Method   string `gorm:"not null"`
-	Data     string
 	Headers  string `gorm:"not null"`
 	Status   int    `gorm:"not null"`
+	Data     string
 	Response string
 
 	SessionUUID uuid.UUID `gorm:"not null"`

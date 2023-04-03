@@ -7,10 +7,14 @@ import (
 	"gorm.io/gorm"
 )
 
+func IsPageView(db *gorm.DB) *gorm.DB {
+	return db.Model(models.PerformanceSpan{}).
+		Where("name = ?", models.LCP)
+}
+
 func (dao *Dao) FindPageViewCount(db *gorm.DB) int64 {
 	var count int64
-	db.Model(models.PerformanceSpan{}).
-		Where("name = ?", models.LCP).
+	db.Scopes(IsPageView).
 		Count(&count)
 	return count
 }
@@ -29,10 +33,8 @@ const dayAndUniqueCountColumn = "strftime('%Y-%m-%d', datetime(created_at, 'loca
 func (dao *Dao) FindPageViewInterval(db *gorm.DB, byHour bool) []IntervalData {
 	var results []IntervalData
 
-	// Build the query to group by hour, count distinct sessions with LCP span
-	db.Model(&models.PerformanceSpan{}).
+	db.Scopes(IsPageView).
 		Select(tools.Ternary(byHour, hourAndCountColumn, dayAndCountColumn)).
-		Where("name = ?", models.LCP).
 		Group("x").
 		Order("x ASC").
 		Scan(&results)
@@ -43,10 +45,8 @@ func (dao *Dao) FindPageViewInterval(db *gorm.DB, byHour bool) []IntervalData {
 func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, byHour bool) []IntervalData {
 	var results []IntervalData
 
-	// Build the query to group by hour, count distinct sessions with LCP span
-	db.Model(&models.PerformanceSpan{}).
+	db.Scopes(IsPageView).
 		Select(tools.Ternary(byHour, hourAndUniqueCountColumn, dayAndUniqueCountColumn)).
-		Where("name = ?", models.LCP).
 		Group("x").
 		Order("x ASC").
 		Scan(&results)
@@ -55,9 +55,8 @@ func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, byHour bool) []IntervalDa
 
 func (dao *Dao) FindUniqueVisitorCount(db *gorm.DB) int64 {
 	var count int64
-	db.Model(models.PerformanceSpan{}).
+	db.Scopes(IsPageView).
 		Distinct("session_uuid").
-		Where("name = ?", models.LCP).
 		Count(&count)
 	return count
 }
