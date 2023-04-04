@@ -74,7 +74,7 @@ func TestCreateError(t *testing.T) {
 			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				errors := []models.JSError{}
-				server.Dao.DB().Find(&errors)
+				server.Dao.DB.Find(&errors)
 				assert.Len(t, errors, 1)
 				assert.Equal(t, errors[0].SessionUUID, sessionUUID)
 			},
@@ -88,7 +88,7 @@ func TestCreateError(t *testing.T) {
 			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				errors := []models.JSError{}
-				server.Dao.DB().Find(&errors)
+				server.Dao.DB.Find(&errors)
 				assert.Len(t, errors, 2)
 				assert.Equal(t, errors[0].SessionUUID, sessionUUID)
 				assert.Equal(t, errors[1].SessionUUID, sessionUUID)
@@ -110,7 +110,7 @@ func TestCreateError(t *testing.T) {
 			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				https := []models.HTTPSpan{}
-				server.Dao.DB().Find(&https)
+				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
 				assert.Equal(t, https[0].SessionUUID, sessionUUID)
 			},
@@ -127,7 +127,7 @@ func TestCreateError(t *testing.T) {
 			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				https := []models.Event{}
-				server.Dao.DB().Find(&https)
+				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
 				assert.Equal(t, https[0].SessionUUID, sessionUUID)
 			},
@@ -145,7 +145,7 @@ func TestCreateError(t *testing.T) {
 			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				https := []models.PerformanceSpan{}
-				server.Dao.DB().Find(&https)
+				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
 				assert.Equal(t, https[0].SessionUUID, sessionUUID)
 			},

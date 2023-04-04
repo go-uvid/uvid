@@ -68,7 +68,7 @@ type PerformanceSpan struct {
 
 type User struct {
 	gorm.Model
-	Email    string `gorm:"not null;unique"`
+	Name     string `gorm:"not null;unique"`
 	Password string `gorm:"not null"`
 	Role     int    `gorm:"not null"`
 }

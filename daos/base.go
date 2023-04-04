@@ -1,7 +1,9 @@
 package daos
 
 import (
+	"errors"
 	"luvsic3/uvid/models"
+	"luvsic3/uvid/tools"
 	"time"
 
 	"gorm.io/driver/sqlite"
@@ -9,7 +11,7 @@ import (
 )
 
 type Dao struct {
-	db *gorm.DB
+	DB *gorm.DB
 }
 
 func New(dsn string) *Dao {
@@ -28,14 +30,30 @@ func New(dsn string) *Dao {
 	}
 }
 
-func NewInMemoryDao() *Dao {
-	return New(":memory:")
-}
-
-func (dao *Dao) DB() *gorm.DB {
-	return dao.db
-}
-
 func (dao *Dao) TimeRange(start time.Time, end time.Time) *gorm.DB {
-	return dao.db.Where("created_at >= ? AND created_at < ?", start, end).Session(&gorm.Session{})
+	return dao.DB.Where("created_at >= ? AND created_at < ?", start, end).Session(&gorm.Session{})
+}
+
+const rootUserName = "root"
+
+func (dao *Dao) InitializeDB() error {
+	rootUser := models.User{
+		Name: rootUserName,
+	}
+	err := dao.DB.First(&rootUser).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		pass, err := tools.HashPassword(rootUserName)
+		if err != nil {
+			return err
+		}
+		err = dao.DB.Create(&models.User{
+			Name:     rootUserName,
+			Password: string(pass),
+		}).Error
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	return err
 }

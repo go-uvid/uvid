@@ -19,7 +19,7 @@ func (dao *Dao) CreateSession(dto *dtos.SessionDTO) (*models.Session, error) {
 		Meta:       dto.Meta,
 		UUID:       uuid.New(),
 	}
-	err := dao.db.Create(&model).Error
+	err := dao.DB.Create(&model).Error
 	return &model, err
 }
 
@@ -31,7 +31,7 @@ func (dao *Dao) CreateJSError(sessionUUID uuid.UUID, dto *dtos.ErrorDTO) (*model
 		Stack:       dto.Stack,
 		Cause:       dto.Cause,
 	}
-	err := dao.db.Create(&model).Error
+	err := dao.DB.Create(&model).Error
 	return &model, err
 }
 
@@ -41,7 +41,7 @@ func (dao *Dao) CreateEvent(sessionUUID uuid.UUID, dto *dtos.EventDTO) (*models.
 		Name:        dto.Name,
 		Value:       dto.Value,
 	}
-	err := dao.db.Create(&model).Error
+	err := dao.DB.Create(&model).Error
 	return &model, err
 }
 
@@ -52,7 +52,7 @@ func (dao *Dao) CreatePerformance(sessionUUID uuid.UUID, dto *dtos.PerformanceDT
 		Value:       dto.Value,
 		URL:         dto.URL,
 	}
-	err := dao.db.Create(&model).Error
+	err := dao.DB.Create(&model).Error
 	return &model, err
 }
 
@@ -66,6 +66,6 @@ func (dao *Dao) CreateHTTP(sessionUUID uuid.UUID, dto *dtos.HTTPDTO) (*models.HT
 		Data:        dto.Data,
 		Response:    dto.Response,
 	}
-	err := dao.db.Create(&model).Error
+	err := dao.DB.Create(&model).Error
 	return &model, err
 }

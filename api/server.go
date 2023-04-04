@@ -22,6 +22,10 @@ func New(dsn string) Server {
 		App: echo.New(),
 		Dao: daos.New(dsn),
 	}
+	err := server.Dao.InitializeDB()
+	if err != nil {
+		panic(err)
+	}
 
 	server.App.Validator = &dtos.CustomValidator{Validator: validator.New()}
 

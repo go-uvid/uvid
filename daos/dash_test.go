@@ -12,8 +12,8 @@ import (
 )
 
 func TestFindPageViewInterval(t *testing.T) {
-	dao := daos.NewInMemoryDao()
-	db := dao.DB()
+	dao := NewInMemoryDao()
+	db := dao.DB
 
 	results := dao.FindPageViewInterval(dao.TimeRange(time.Time{}, time.Now()), true)
 	assert.Empty(t, results)
@@ -34,8 +34,8 @@ func TestFindPageViewInterval(t *testing.T) {
 }
 
 func TestFindAveragePerformanceInterval(t *testing.T) {
-	dao := daos.NewInMemoryDao()
-	db := dao.DB()
+	dao := NewInMemoryDao()
+	db := dao.DB
 
 	// Create some performance span with different values
 	startTime := truncateToday()
@@ -55,8 +55,8 @@ func TestFindAveragePerformanceInterval(t *testing.T) {
 }
 
 func TestFindHTTPErrorInterval(t *testing.T) {
-	dao := daos.NewInMemoryDao()
-	db := dao.DB()
+	dao := NewInMemoryDao()
+	db := dao.DB
 
 	// Create some HTTP span with different statuses
 	startTime := truncateToday()
@@ -77,8 +77,8 @@ func TestFindHTTPErrorInterval(t *testing.T) {
 }
 
 func TestFindUniqueVisitorInterval(t *testing.T) {
-	dao := daos.NewInMemoryDao()
-	db := dao.DB()
+	dao := NewInMemoryDao()
+	db := dao.DB
 
 	// Create some performance span with different session ids
 	startTime := truncateToday()
@@ -108,4 +108,8 @@ func TestFindUniqueVisitorInterval(t *testing.T) {
 
 func truncateToday() time.Time {
 	return time.Now().Truncate(24 * time.Hour)
+}
+
+func NewInMemoryDao() *daos.Dao {
+	return daos.New(":memory:")
 }
