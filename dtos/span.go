@@ -24,7 +24,7 @@ type (
 	}
 	EventDTO struct {
 		Name  string `json:"name" validate:"required"`
-		Value string `json:"value" validate:"required"`
+		Value string `json:"value"`
 	}
 	PerformanceDTO struct {
 		Name  string  `json:"name" validate:"required"`

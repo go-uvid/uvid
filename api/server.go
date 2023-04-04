@@ -3,6 +3,7 @@ package api
 import (
 	"luvsic3/uvid/daos"
 	"luvsic3/uvid/dtos"
+	"luvsic3/uvid/tools"
 	"os"
 	"time"
 
@@ -38,6 +39,7 @@ func New(dsn string) Server {
 }
 
 func (server Server) Start() {
-	PORT := os.Getenv("PORT")
-	server.App.Logger.Fatal(server.App.Start(":" + PORT))
+	envPort := os.Getenv("PORT")
+	port := tools.Ternary(len(envPort) == 0, "3000", envPort)
+	server.App.Logger.Fatal(server.App.Start(":" + port))
 }

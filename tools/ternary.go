@@ -1,6 +1,6 @@
 package tools
 
-func Ternary(condition bool, trueVal, falseVal interface{}) interface{} {
+func Ternary[T any](condition bool, trueVal, falseVal T) T {
 	if condition {
 		return trueVal
 	}

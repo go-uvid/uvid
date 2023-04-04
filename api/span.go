@@ -56,7 +56,7 @@ func (api *spanApi) createError(c echo.Context) error {
 
 func (api *spanApi) createHTTP(c echo.Context) error {
 	dto := &dtos.HTTPDTO{}
-	if err := dtos.BindAndValidateDTO(c, &dto); err != nil {
+	if err := dtos.BindAndValidateDTO(c, dto); err != nil {
 		return err
 	}
 	session := GetSessionUUID(c)
@@ -66,7 +66,7 @@ func (api *spanApi) createHTTP(c echo.Context) error {
 
 func (api *spanApi) createEvent(c echo.Context) error {
 	dto := &dtos.EventDTO{}
-	if err := dtos.BindAndValidateDTO(c, &dto); err != nil {
+	if err := dtos.BindAndValidateDTO(c, dto); err != nil {
 		return err
 	}
 	session := GetSessionUUID(c)
@@ -76,7 +76,7 @@ func (api *spanApi) createEvent(c echo.Context) error {
 
 func (api *spanApi) createPerformance(c echo.Context) error {
 	dto := &dtos.PerformanceDTO{}
-	if err := dtos.BindAndValidateDTO(c, &dto); err != nil {
+	if err := dtos.BindAndValidateDTO(c, dto); err != nil {
 		return err
 	}
 	session := GetSessionUUID(c)
