@@ -8,8 +8,7 @@ import (
 )
 
 func IsPageView(db *gorm.DB) *gorm.DB {
-	return db.Model(models.PerformanceSpan{}).
-		Where("name = ?", models.LCP)
+	return db.Model(models.PageView{})
 }
 
 func (dao *Dao) FindPageViewCount(db *gorm.DB) int64 {
@@ -64,7 +63,7 @@ func (dao *Dao) FindUniqueVisitorCount(db *gorm.DB) int64 {
 // findAveragePerformance returns the average performance spans in the given time range
 func (dao *Dao) FindAveragePerformanceInterval(db *gorm.DB) []IntervalData {
 	var results []IntervalData
-	db.Model(&models.PerformanceSpan{}).
+	db.Model(&models.Performance{}).
 		Select("name as x, AVG(value) as y").
 		Group("name").
 		Scan(&results)
@@ -102,7 +101,7 @@ func (dao *Dao) FindJSErrorInterval(db *gorm.DB, byHour bool) []IntervalData {
 
 func (dao *Dao) FindHTTPErrorCount(db *gorm.DB) int64 {
 	var count int64
-	db.Model(models.HTTPSpan{}).Where("status < ? or status > ?", 200, 299).Count(&count)
+	db.Model(models.HTTP{}).Where("status < ? or status > ?", 200, 299).Count(&count)
 	return count
 }
 
@@ -110,7 +109,7 @@ func (dao *Dao) FindHTTPErrorCount(db *gorm.DB) int64 {
 func (dao *Dao) FindHTTPErrorInterval(db *gorm.DB, byHour bool) []IntervalData {
 	var results []IntervalData
 
-	db.Model(&models.HTTPSpan{}).
+	db.Model(&models.HTTP{}).
 		Select(tools.Ternary(byHour, hourAndCountColumn, dayAndCountColumn)).
 		Where("status < ? or status > ?", 200, 299).
 		Group("x").

@@ -17,10 +17,11 @@ type Session struct {
 	Referrer   string
 	Meta       string
 
-	JSErrors        []JSError         `gorm:"foreignKey:SessionUUID"`
-	HTTPSpan        []HTTPSpan        `gorm:"foreignKey:SessionUUID"`
-	Events          []Event           `gorm:"foreignKey:SessionUUID"`
-	PerformanceSpan []PerformanceSpan `gorm:"foreignKey:SessionUUID"`
+	JSErrors     []JSError     `gorm:"foreignKey:SessionUUID"`
+	HTTPs        []HTTP        `gorm:"foreignKey:SessionUUID"`
+	Events       []Event       `gorm:"foreignKey:SessionUUID"`
+	Performances []Performance `gorm:"foreignKey:SessionUUID"`
+	PageViews    []PageView    `gorm:"foreignKey:SessionUUID"`
 }
 
 type JSError struct {
@@ -34,9 +35,9 @@ type JSError struct {
 	Session     Session   `gorm:"references:UUID"`
 }
 
-type HTTPSpan struct {
+type HTTP struct {
 	gorm.Model
-	URL      string `gorm:"not null"`
+	Resource string `gorm:"not null"`
 	Method   string `gorm:"not null"`
 	Headers  string `gorm:"not null"`
 	Status   int    `gorm:"not null"`
@@ -56,11 +57,19 @@ type Event struct {
 	Session     Session   `gorm:"references:UUID"`
 }
 
-type PerformanceSpan struct {
+type Performance struct {
 	gorm.Model
 	Name  string  `gorm:"not null"`
 	Value float64 `gorm:"not null"`
 	URL   string  `gorm:"not null"`
+
+	SessionUUID uuid.UUID `gorm:"not null"`
+	Session     Session   `gorm:"references:UUID"`
+}
+
+type PageView struct {
+	gorm.Model
+	URL string `gorm:"not null"`
 
 	SessionUUID uuid.UUID `gorm:"not null"`
 	Session     Session   `gorm:"references:UUID"`

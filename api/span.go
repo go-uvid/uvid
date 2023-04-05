@@ -16,6 +16,7 @@ func bindSpanApi(server Server) {
 	rg.POST("/http", api.createHTTP, NewEnsureSessionMiddleware(api))
 	rg.POST("/event", api.createEvent, NewEnsureSessionMiddleware(api))
 	rg.POST("/performance", api.createPerformance, NewEnsureSessionMiddleware(api))
+	rg.POST("/pageview", api.createPageView, NewEnsureSessionMiddleware(api))
 }
 
 type spanApi struct {
@@ -81,6 +82,16 @@ func (api *spanApi) createPerformance(c echo.Context) error {
 	}
 	session := GetSessionUUID(c)
 	_, err := api.server.Dao.CreatePerformance(session, dto)
+	return handleDaoAndResponse(c, err)
+}
+
+func (api *spanApi) createPageView(c echo.Context) error {
+	dto := &dtos.PageViewDTO{}
+	if err := dtos.BindAndValidateDTO(c, dto); err != nil {
+		return err
+	}
+	session := GetSessionUUID(c)
+	_, err := api.server.Dao.CreatePageView(session, dto)
 	return handleDaoAndResponse(c, err)
 }
 

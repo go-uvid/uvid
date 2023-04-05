@@ -15,7 +15,7 @@ type (
 		Cause   string `json:"cause"`
 	}
 	HTTPDTO struct {
-		URL      string `json:"url" validate:"required"`
+		Resource string `json:"url" validate:"required"`
 		Method   string `json:"method" validate:"required"`
 		Headers  string `json:"headers" validate:"required"`
 		Status   int    `json:"status"  validate:"required"`
@@ -30,6 +30,9 @@ type (
 		Name  string  `json:"name" validate:"required"`
 		Value float64 `json:"value" validate:"required"`
 		URL   string  `json:"url" validate:"required"`
+	}
+	PageViewDTO struct {
+		URL string `json:"url" validate:"required"`
 	}
 
 	BaseSessionDTO struct {

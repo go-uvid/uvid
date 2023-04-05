@@ -21,6 +21,7 @@ const (
 	API_HTTP    = "/span/http"
 	API_EVENT   = "/span/event"
 	API_PERF    = "/span/performance"
+	API_PV      = "/span/pageview"
 )
 
 var requestHeader = map[string]string{
@@ -99,7 +100,7 @@ func TestCreateError(t *testing.T) {
 			Method: http.MethodPost,
 			Url:    API_HTTP,
 			Body: strings.NewReader(tools.StructToJSONString(dtos.HTTPDTO{
-				URL:      randomURL(),
+				Resource: randomReferrer(),
 				Method:   randomHttpMethod(),
 				Headers:  "Content-Type: application/json",
 				Status:   http.StatusInternalServerError,
@@ -109,7 +110,7 @@ func TestCreateError(t *testing.T) {
 			ExpectedStatus: http.StatusNoContent,
 			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
-				https := []models.HTTPSpan{}
+				https := []models.HTTP{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
 				assert.Equal(t, https[0].SessionUUID, sessionUUID)
@@ -139,12 +140,28 @@ func TestCreateError(t *testing.T) {
 			Body: strings.NewReader(tools.StructToJSONString(dtos.PerformanceDTO{
 				Name:  randomPerfName(),
 				Value: randomPerfValue(),
-				URL:   randomURL(),
+				URL:   randomReferrer(),
 			})),
 			ExpectedStatus: http.StatusNoContent,
 			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
-				https := []models.PerformanceSpan{}
+				https := []models.Performance{}
+				server.Dao.DB.Find(&https)
+				assert.Len(t, https, 1)
+				assert.Equal(t, https[0].SessionUUID, sessionUUID)
+			},
+		},
+		{
+			Name:   "create pageview",
+			Method: http.MethodPost,
+			Url:    API_PV,
+			Body: strings.NewReader(tools.StructToJSONString(dtos.PerformanceDTO{
+				URL: randomReferrer(),
+			})),
+			ExpectedStatus: http.StatusNoContent,
+			BeforeRequest:  BeforeRequest,
+			AfterRequest: func(res *http.Response, server *api.Server) {
+				https := []models.PageView{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
 				assert.Equal(t, https[0].SessionUUID, sessionUUID)
@@ -182,8 +199,8 @@ func randomPerfValue() float64 {
 	return rand.Float64() * 10
 }
 
-// randomURL generates a random URL for a PerformanceMetric
-func randomURL() string {
+// randomReferrer generates a random URL for a PerformanceMetric
+func randomReferrer() string {
 	urls := []string{"https://example.com", "https://google.com", "https://github.com", "https://stackoverflow.com", "https://wikipedia.org"}
 	return urls[rand.Intn(len(urls))]
 }

@@ -45,8 +45,8 @@ func (dao *Dao) CreateEvent(sessionUUID uuid.UUID, dto *dtos.EventDTO) (*models.
 	return &model, err
 }
 
-func (dao *Dao) CreatePerformance(sessionUUID uuid.UUID, dto *dtos.PerformanceDTO) (*models.PerformanceSpan, error) {
-	model := models.PerformanceSpan{
+func (dao *Dao) CreatePerformance(sessionUUID uuid.UUID, dto *dtos.PerformanceDTO) (*models.Performance, error) {
+	model := models.Performance{
 		SessionUUID: sessionUUID,
 		Name:        dto.Name,
 		Value:       dto.Value,
@@ -56,15 +56,24 @@ func (dao *Dao) CreatePerformance(sessionUUID uuid.UUID, dto *dtos.PerformanceDT
 	return &model, err
 }
 
-func (dao *Dao) CreateHTTP(sessionUUID uuid.UUID, dto *dtos.HTTPDTO) (*models.HTTPSpan, error) {
-	model := models.HTTPSpan{
+func (dao *Dao) CreateHTTP(sessionUUID uuid.UUID, dto *dtos.HTTPDTO) (*models.HTTP, error) {
+	model := models.HTTP{
 		SessionUUID: sessionUUID,
-		URL:         dto.URL,
+		Resource:    dto.Resource,
 		Method:      dto.Method,
 		Headers:     dto.Headers,
 		Status:      dto.Status,
 		Data:        dto.Data,
 		Response:    dto.Response,
+	}
+	err := dao.DB.Create(&model).Error
+	return &model, err
+}
+
+func (dao *Dao) CreatePageView(sessionUUID uuid.UUID, dto *dtos.PageViewDTO) (*models.PageView, error) {
+	model := models.PageView{
+		SessionUUID: sessionUUID,
+		URL:         dto.URL,
 	}
 	err := dao.DB.Create(&model).Error
 	return &model, err
