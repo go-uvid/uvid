@@ -4,9 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Uvid</title>
+    <style>
+      #app {
+        display: flex;
+        justify-content: center;
+      }
+      button {
+        font-size: 16px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #ddd;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <button id="error-button">
+        Error
+      </button>
+      <button id="http-button">
+        HTTP
+      </button>
+      <button id="event-button">
+        Event
+      </button>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -15,7 +15,7 @@ type (
 		Cause   string `json:"cause"`
 	}
 	HTTPDTO struct {
-		Resource string `json:"url" validate:"required"`
+		Resource string `json:"resource" validate:"required"`
 		Method   string `json:"method" validate:"required"`
 		Headers  string `json:"headers" validate:"required"`
 		Status   int    `json:"status"  validate:"required"`
@@ -36,7 +36,7 @@ type (
 	}
 
 	BaseSessionDTO struct {
-		AppVersion string `json:"app_version"`
+		AppVersion string `json:"appVersion"`
 		URL        string `json:"url" validate:"required"`
 		Screen     string `json:"screen" validate:"required"`
 		Referrer   string `json:"referrer" validate:"required"`
