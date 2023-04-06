@@ -8,7 +8,7 @@ export type SDKConfig = {
 	 * DO NOT use this option
 	 * @warning
 	 */
-	__internal__request?: (path: string, data: RequestData) => Promise<void>;
+	__internal__request?: (path: string, data: RequestData) => Promise<Response>;
 };
 
 export const sdkConfig: SDKConfig = {

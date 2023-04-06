@@ -9,7 +9,7 @@ export async function performance(name: PerformanceDTO['name'], value: number) {
 		name,
 		value,
 	};
-	await request('/span/performance', span as PerformanceDTO);
+	return request('/span/performance', span as PerformanceDTO);
 }
 
 // A metric callback may be called more than once:

@@ -18,10 +18,10 @@ async function initSession() {
 		language: navigator.language,
 		meta: JSON.stringify(sdkConfig.sessionMeta),
 	};
-	await (sdkConfig.__internal__request ?? _request)('/span/session', data);
+	return (sdkConfig.__internal__request ?? _request)('/span/session', data);
 }
 
-let sessionRequest: Promise<void> | undefined;
+let sessionRequest: Promise<Response> | undefined;
 
 export async function request(path: string, data: RequestData) {
 	if (!sessionRequest) {

@@ -4,7 +4,7 @@
 			"path": ".."
 		},
 		{
-			"path": "../portal"
+			"path": "../portal/packages/uvid-js"
 		}
 	],
 	"settings": {}

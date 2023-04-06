@@ -4,5 +4,5 @@ export async function pageview() {
 	const span = {
 		url: location.href,
 	};
-	await request('/span/pageview', span);
+	return request('/span/pageview', span);
 }

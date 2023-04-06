@@ -7,7 +7,7 @@ export async function error(error: Error) {
 		message,
 		stack,
 	};
-	await request('/span/error', span);
+	return request('/span/error', span);
 }
 
 export function listenError() {

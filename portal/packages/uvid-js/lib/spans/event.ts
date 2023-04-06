@@ -5,5 +5,5 @@ export async function event(name: string, value: string) {
 		name,
 		value,
 	};
-	await request('/span/event', span);
+	return request('/span/event', span);
 }
