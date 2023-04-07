@@ -14,12 +14,18 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
     devDependencies:
+      '@playwright/test':
+        specifier: ^1.32.2
+        version: registry.npmmirror.com/@playwright/test@1.32.2
+      '@types/node':
+        specifier: ^18.15.11
+        version: registry.npmmirror.com/@types/node@18.15.11
       typescript:
         specifier: ^4.9.4
         version: 4.9.5
       vite:
         specifier: ^4.0.4
-        version: 4.2.1
+        version: 4.2.1(@types/node@18.15.11)
 
 packages:
 
@@ -2763,7 +2769,7 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite@4.2.1:
+  /vite@4.2.1(@types/node@18.15.11):
     resolution: {integrity: sha512-7MKhqdy0ISo4wnvwtqZkjke6XN4taqQ2TBaTccLIpOKv7Vp2h4Y+NpmWCnGDeSvvn45KxvWgGyb0MkHvY1vgbg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -2788,6 +2794,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': registry.npmmirror.com/@types/node@18.15.11
       esbuild: 0.17.15
       postcss: 8.4.21
       resolve: 1.22.1
@@ -3203,6 +3210,19 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': registry.npmmirror.com/@jridgewell/resolve-uri@3.1.0
       '@jridgewell/sourcemap-codec': registry.npmmirror.com/@jridgewell/sourcemap-codec@1.4.14
+    dev: true
+
+  registry.npmmirror.com/@playwright/test@1.32.2:
+    resolution: {integrity: sha512-nhaTSDpEdTTttdkDE8Z6K3icuG1DVRxrl98Qq0Lfc63SS9a2sjc9+x8ezysh7MzCKz6Y+nArml3/mmt+gqRmQQ==, registry: https://registry-npm.gaoding.com/, tarball: https://registry.npmmirror.com/@playwright/test/-/test-1.32.2.tgz}
+    name: '@playwright/test'
+    version: 1.32.2
+    engines: {node: '>=14'}
+    hasBin: true
+    dependencies:
+      '@types/node': registry.npmmirror.com/@types/node@18.15.11
+      playwright-core: registry.npmmirror.com/playwright-core@1.32.2
+    optionalDependencies:
+      fsevents: registry.npmmirror.com/fsevents@2.3.2
     dev: true
 
   registry.npmmirror.com/@types/eslint-scope@3.7.4:
@@ -3652,6 +3672,14 @@ packages:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==, registry: https://registry-npm.gaoding.com/, tarball: https://registry.npmmirror.com/picocolors/-/picocolors-1.0.0.tgz}
     name: picocolors
     version: 1.0.0
+    dev: true
+
+  registry.npmmirror.com/playwright-core@1.32.2:
+    resolution: {integrity: sha512-zD7aonO+07kOTthsrCR3YCVnDcqSHIJpdFUtZEMOb6//1Rc7/6mZDRdw+nlzcQiQltOOsiqI3rrSyn/SlyjnJQ==, registry: https://registry-npm.gaoding.com/, tarball: https://registry.npmmirror.com/playwright-core/-/playwright-core-1.32.2.tgz}
+    name: playwright-core
+    version: 1.32.2
+    engines: {node: '>=14'}
+    hasBin: true
     dev: true
 
   registry.npmmirror.com/punycode@2.3.0:

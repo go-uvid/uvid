@@ -37,3 +37,14 @@ export function assert(
 		throw new Error(message);
 	}
 }
+
+export function domReady(callback: () => void) {
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', function fn() {
+			document.removeEventListener('DOMContentLoaded', fn);
+			callback();
+		});
+	} else {
+		callback();
+	}
+}
