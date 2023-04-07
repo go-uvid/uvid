@@ -9,9 +9,9 @@ import (
 )
 
 func bindDashStatic(server Server) {
-	rg := server.App.Group("/dash")
-	rg.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+	server.App.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		Filesystem: http.FS(portal.DashFolder),
+		Root:       "/packages/dash/dist",
 		HTML5:      true,
 	}))
 }
