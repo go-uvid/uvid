@@ -1,11 +1,9 @@
 package main
 
 import (
-	"luvsic3/uvid/api"
+	"luvsic3/uvid/cmd"
 )
 
-const DSN = "uvid.db"
-
 func main() {
-	api.New(DSN).Start()
+	cmd.Execute()
 }
