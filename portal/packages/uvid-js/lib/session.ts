@@ -50,5 +50,8 @@ async function _request(path: string, data: RequestData) {
 		},
 		keepalive: true,
 		body: JSON.stringify(data),
+	}).then((response) => {
+		if (response.ok) return response;
+		throw new Error(response.statusText);
 	});
 }

@@ -4,11 +4,12 @@ import {request} from '../session';
 import {type PerformanceDTO} from '../types/span';
 
 export async function performance(name: PerformanceDTO['name'], value: number) {
-	const span = {
+	const span: PerformanceDTO = {
 		name,
 		value,
+		url: location.href,
 	};
-	return request('/span/performance', span as PerformanceDTO);
+	return request('/span/performance', span);
 }
 
 // A metric callback may be called more than once:

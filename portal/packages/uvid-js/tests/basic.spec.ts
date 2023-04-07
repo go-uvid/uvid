@@ -1,7 +1,12 @@
 import process from 'node:process';
 import path from 'node:path';
 import {test, expect} from '@playwright/test';
-import {type BaseSessionDTO, type PerformanceDTO} from '../lib/types/span';
+import {
+	type ErrorDTO,
+	type BaseSessionDTO,
+	type PerformanceDTO,
+	type EventDTO,
+} from '../lib/types/span';
 
 const host = 'http://localhost:3000';
 
@@ -46,8 +51,9 @@ test('basic', async ({page}) => {
 	await button?.click();
 	await page.waitForRequest(`${host}/span/performance`);
 
+	// Using globalThis.atob will cause error: TypeError: Cannot set property message of  which has only a getter
 	const session: BaseSessionDTO = {
-		url: atob(pageUrl),
+		url: pageUrl,
 		screen,
 		referrer,
 		language,
@@ -60,7 +66,20 @@ test('basic', async ({page}) => {
 	const fidValue = await page.evaluate(
 		() => window.uvid.performanceMetrics.find((m) => m.name === 'FID')!.value,
 	);
-	const url = atob(await page.evaluate(() => window.location.href));
+	const url = await page.evaluate(() => window.location.href);
+	const errorMessage = 'test error';
+	const errorStack = await page.evaluate(async (errorMessage_: string) => {
+		const error = new Error(errorMessage_);
+		await window.uvid.error(error);
+		return error.stack;
+	}, errorMessage);
+	const eventData: EventDTO = {
+		name: 'event-name',
+		value: 'event-value',
+	};
+	await page.evaluate(async (eventData_) => {
+		await window.uvid.event(eventData_.name, eventData_.value);
+	}, eventData);
 
 	const lcp: PerformanceDTO = {
 		name: 'LCP',
@@ -72,10 +91,21 @@ test('basic', async ({page}) => {
 		value: fidValue,
 		url,
 	};
+	const error: ErrorDTO = {
+		name: 'Error',
+		message: errorMessage,
+		stack: errorStack!,
+	};
 	const expectData: Data[] = [
 		{
 			url: `${host}/span/session`,
 			body: session,
+		},
+		{
+			url: `${host}/span/pageview`,
+			body: {
+				url,
+			},
 		},
 		{
 			url: `${host}/span/performance`,
@@ -84,6 +114,14 @@ test('basic', async ({page}) => {
 		{
 			url: `${host}/span/performance`,
 			body: fid,
+		},
+		{
+			url: `${host}/span/error`,
+			body: error,
+		},
+		{
+			url: `${host}/span/event`,
+			body: eventData,
 		},
 	];
 	expect(actualData).toEqual(expectData);

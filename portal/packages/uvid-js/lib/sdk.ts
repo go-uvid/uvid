@@ -10,7 +10,7 @@ import {type HTTPDTO, type PerformanceDTO} from './types/span';
 export type SDK = {
 	error: (error: Error) => Promise<Response>;
 	http: (model: HTTPDTO) => Promise<Response>;
-	event: (name: string, value: string) => Promise<Response>;
+	event: (name: string, value?: string) => Promise<Response>;
 	performance: (
 		name: PerformanceDTO['name'],
 		value: number,

@@ -1,6 +1,6 @@
 import {request} from '../session';
 
-export async function event(name: string, value: string) {
+export async function event(name: string, value?: string) {
 	const span = {
 		name,
 		value,
