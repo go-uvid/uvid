@@ -1,6 +1,7 @@
 import {type SDKConfig, sdkConfig} from './config';
 import {sdk} from './sdk';
 import {listenError} from './spans/error';
+import {listenEvent} from './spans/event';
 import {listenHTTP} from './spans/http';
 import {listenPageview} from './spans/pageview';
 import {listenPerformance} from './spans/performance';
@@ -15,6 +16,7 @@ export function init(config: SDKConfig): typeof sdk {
 		listenHTTP();
 		listenPerformance();
 		listenPageview();
+		listenEvent();
 		return sdk;
 	} catch (error) {
 		console.error(error);

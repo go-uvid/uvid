@@ -73,13 +73,19 @@ test('basic', async ({page}) => {
 		await window.uvid.error(error);
 		return error.stack;
 	}, errorMessage);
-	const eventData: EventDTO = {
+	const testEvent: EventDTO = {
 		name: 'event-name',
 		value: 'event-value',
 	};
-	await page.evaluate(async (eventData_) => {
-		await window.uvid.event(eventData_.name, eventData_.value);
-	}, eventData);
+	await page.evaluate(async (testEvent_) => {
+		await window.uvid.event(testEvent_.name, testEvent_.value);
+	}, testEvent);
+	const registerEvent: EventDTO = {
+		name: 'register',
+		value: 'test',
+	};
+	const registerButton = await page.$('[data-uvid-name]');
+	await registerButton?.click();
 
 	const lcp: PerformanceDTO = {
 		name: 'LCP',
@@ -121,7 +127,11 @@ test('basic', async ({page}) => {
 		},
 		{
 			url: `${host}/span/event`,
-			body: eventData,
+			body: testEvent,
+		},
+		{
+			url: `${host}/span/event`,
+			body: registerEvent,
 		},
 	];
 	expect(actualData).toEqual(expectData);
