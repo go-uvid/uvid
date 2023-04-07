@@ -39,6 +39,7 @@ func New(dsn string) Server {
 	server.App.Use(middleware.Logger())
 
 	bindSpanApi(server)
+	bindDashStatic(server)
 	return server
 }
 

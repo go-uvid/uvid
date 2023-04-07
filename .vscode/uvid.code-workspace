@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../portal/packages/uvid-js"
+		},
+		{
+			"path": "../portal/packages/dash"
 		}
 	],
 	"settings": {}
