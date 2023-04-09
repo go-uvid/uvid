@@ -53,7 +53,7 @@ func getSessionApi(t *testing.T, sessionUUID *uuid.UUID, cookie *http.Cookie) te
 	return sessionApiScenarios
 }
 
-func TestCreateError(t *testing.T) {
+func TestCreateSpan(t *testing.T) {
 	var sessionUUID uuid.UUID
 	var cookie http.Cookie
 	var sessionApiScenarios = getSessionApi(t, &sessionUUID, &cookie)
@@ -121,8 +121,8 @@ func TestCreateError(t *testing.T) {
 			Method: http.MethodPost,
 			Url:    API_EVENT,
 			Body: strings.NewReader(tools.StructToJSONString(dtos.EventDTO{
-				Name:  randomEventName(),
-				Value: "",
+				Action: randomEventAction(),
+				Value:  "",
 			})),
 			ExpectedStatus: http.StatusNoContent,
 			BeforeRequest:  BeforeRequest,
@@ -210,7 +210,7 @@ func randomHttpMethod() string {
 	return methods[rand.Intn(len(methods))]
 }
 
-func randomEventName() string {
+func randomEventAction() string {
 	names := []string{"register", "login", "logout", "click", "view", "add", "remove", "update"}
 	return names[rand.Intn(len(names))]
 }

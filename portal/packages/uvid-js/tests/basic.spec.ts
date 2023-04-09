@@ -74,17 +74,17 @@ test('basic', async ({page}) => {
 		return error.stack;
 	}, errorMessage);
 	const testEvent: EventDTO = {
-		name: 'event-name',
+		action: 'event-name',
 		value: 'event-value',
 	};
 	await page.evaluate(async (testEvent_) => {
-		await window.uvid.event(testEvent_.name, testEvent_.value);
+		await window.uvid.event(testEvent_.action, testEvent_.value);
 	}, testEvent);
 	const registerEvent: EventDTO = {
-		name: 'register',
+		action: 'register',
 		value: 'test',
 	};
-	const registerButton = await page.$('[data-uvid-name]');
+	const registerButton = await page.$('#register');
 	await registerButton?.click();
 
 	const lcp: PerformanceDTO = {

@@ -23,8 +23,8 @@ type (
 		Response string `json:"response"`
 	}
 	EventDTO struct {
-		Name  string `json:"name" validate:"required"`
-		Value string `json:"value"`
+		Action string `json:"action" validate:"required"`
+		Value  string `json:"value"`
 	}
 	PerformanceDTO struct {
 		Name  string  `json:"name" validate:"required"`

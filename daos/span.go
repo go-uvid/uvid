@@ -38,7 +38,7 @@ func (dao *Dao) CreateJSError(sessionUUID uuid.UUID, dto *dtos.ErrorDTO) (*model
 func (dao *Dao) CreateEvent(sessionUUID uuid.UUID, dto *dtos.EventDTO) (*models.Event, error) {
 	model := models.Event{
 		SessionUUID: sessionUUID,
-		Name:        dto.Name,
+		Action:      dto.Action,
 		Value:       dto.Value,
 	}
 	err := dao.DB.Create(&model).Error

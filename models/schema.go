@@ -50,8 +50,8 @@ type HTTP struct {
 
 type Event struct {
 	gorm.Model
-	Name  string `gorm:"not null"`
-	Value string `gorm:"not null"`
+	Action string `gorm:"not null"`
+	Value  string `gorm:"not null"`
 
 	SessionUUID uuid.UUID `gorm:"not null"`
 	Session     Session   `gorm:"references:UUID"`

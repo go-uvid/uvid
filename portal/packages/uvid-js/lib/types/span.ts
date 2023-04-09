@@ -15,7 +15,7 @@ export type HTTPDTO = {
 };
 
 export type EventDTO = {
-	name: string;
+	action: string;
 	value?: string;
 };
 

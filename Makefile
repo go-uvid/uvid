@@ -3,6 +3,7 @@ lint:
 
 test:
 	go test ./... -v --cover
+	cd portal && pnpm --filter "uvid-js" test
 
 test-report:
 	go test ./... -v --cover -coverprofile=coverage.out
