@@ -22,9 +22,10 @@ async function initSession() {
 }
 
 let sessionRequest: Promise<Response> | undefined;
+const hasSessionCookie = hasSession();
 
 export async function request(path: string, data: RequestData) {
-	if (!sessionRequest) {
+	if (!sessionRequest && !hasSessionCookie) {
 		sessionRequest = retryPromise(initSession);
 	}
 
@@ -54,4 +55,10 @@ async function _request(path: string, data: RequestData) {
 		if (response.ok) return response;
 		throw new Error(response.statusText);
 	});
+}
+
+function hasSession() {
+	return document.cookie
+		.split(';')
+		.some((item) => item.trim().startsWith('uvid-session='));
 }
