@@ -82,6 +82,12 @@ type User struct {
 	Role     int    `gorm:"not null"`
 }
 
+type Config struct {
+	gorm.Model
+	Key   string `gorm:"not null;unique"`
+	Value string `gorm:"not null"`
+}
+
 const (
 	LCP = "LCP"
 	CLS = "CLS"

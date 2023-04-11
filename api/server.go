@@ -17,12 +17,18 @@ type Server struct {
 	Dao *daos.Dao
 }
 
+var Configs = map[string]string{}
+
 func New(dsn string) Server {
 	server := Server{
 		App: echo.New(),
 		Dao: daos.New(dsn),
 	}
 	err := server.Dao.InitializeDB()
+	if err != nil {
+		panic(err)
+	}
+	Configs, err = server.Dao.GetAllConfigs()
 	if err != nil {
 		panic(err)
 	}
@@ -39,6 +45,7 @@ func New(dsn string) Server {
 	server.App.Use(middleware.Logger())
 
 	bindSpanApi(server)
+	bindDashApi(server)
 	bindDashStatic(server)
 	return server
 }

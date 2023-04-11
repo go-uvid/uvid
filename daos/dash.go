@@ -117,3 +117,16 @@ func (dao *Dao) FindHTTPErrorInterval(db *gorm.DB, byHour bool) []IntervalData {
 		Scan(&results)
 	return results
 }
+
+// findHTTPErrors returns the number of HTTP errors in the given time range
+func (dao *Dao) GetUserByName(name string) (models.User, error) {
+	user := models.User{
+		Name: name,
+	}
+
+	if err := dao.DB.First(&user).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
