@@ -11,7 +11,7 @@ import (
 func bindDashStatic(server Server) {
 	server.App.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		Filesystem: http.FS(portal.DashFolder),
-		Root:       "/packages/dash/dist",
+		Root:       "/packages/dash/out",
 		HTML5:      true,
 	}))
 }

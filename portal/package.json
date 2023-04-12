@@ -2,19 +2,7 @@
   "name": "uvid",
   "version": "0.0.1",
   "description": "",
-  "scripts": {
-    "test": "xo"
-  },
+  "scripts": {},
   "author": "https://github.com/luvsic3",
-  "license": "ISC",
-  "devDependencies": {
-    "xo": "^0.54.0"
-  },
-  "xo": {
-    "prettier": true,
-    "rules": {
-      "@typescript-eslint/naming-convention": "off",
-      "import/extensions": "off"
-    }
-  }
+  "license": "ISC"
 }
