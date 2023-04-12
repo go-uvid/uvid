@@ -15,7 +15,7 @@ func TestFindPageViewInterval(t *testing.T) {
 	dao := NewInMemoryDao()
 	db := dao.DB
 
-	results := dao.FindPageViewInterval(dao.TimeRange(time.Time{}, time.Now()), true)
+	results, _ := dao.FindPageViewInterval(dao.TimeRange(time.Time{}, time.Now()), true)
 	assert.Empty(t, results)
 
 	startTime := truncateToday()
@@ -25,7 +25,7 @@ func TestFindPageViewInterval(t *testing.T) {
 	db.Create(&models.PageView{URL: "", Model: gorm.Model{CreatedAt: startTime}})
 	db.Create(&models.PageView{URL: "", Model: gorm.Model{CreatedAt: endTime}})
 
-	results = dao.FindPageViewInterval(dao.TimeRange(startTime, startTime.Add(time.Hour)), true)
+	results, _ = dao.FindPageViewInterval(dao.TimeRange(startTime, startTime.Add(time.Hour)), true)
 	result := results[0]
 
 	assert.Len(t, results, 1)
@@ -45,7 +45,7 @@ func TestFindAveragePerformanceInterval(t *testing.T) {
 	db.Create(&models.Performance{Name: models.LCP, Value: 300, Model: gorm.Model{CreatedAt: endTime}})
 
 	// Test by finding the average performance interval for the last hour
-	results := dao.FindAveragePerformanceInterval(dao.TimeRange(endTime, endTime.Add(time.Hour)))
+	results, _ := dao.FindAveragePerformanceInterval(dao.TimeRange(endTime, endTime.Add(time.Hour)))
 	result := results[0]
 
 	// Check that the result is as expected
@@ -67,7 +67,7 @@ func TestFindHTTPErrorInterval(t *testing.T) {
 	db.Create(&models.HTTP{Status: 500, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour * 2)}})
 
 	// Test by finding the HTTP error interval for the last hour
-	results := dao.FindHTTPErrorInterval(dao.TimeRange(startTime.Add(time.Hour), startTime.Add(time.Hour*2)), true)
+	results, _ := dao.FindHTTPErrorInterval(dao.TimeRange(startTime.Add(time.Hour), startTime.Add(time.Hour*2)), true)
 	result := results[0]
 
 	// Check that the result is as expected
@@ -95,7 +95,7 @@ func TestFindUniqueVisitorInterval(t *testing.T) {
 
 	// Test by finding the unique visitor interval for the last 2 hours
 	tr := dao.TimeRange(startTime, endTime)
-	results := dao.FindUniqueVisitorInterval(tr, false)
+	results, _ := dao.FindUniqueVisitorInterval(tr, false)
 
 	assert.Len(t, results, 2)
 	// Check that the result is as expected

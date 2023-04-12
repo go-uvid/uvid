@@ -9,7 +9,7 @@ import (
 )
 
 func bindSpanApi(server Server) {
-	api := &spanApi{server: server}
+	api := &spanApi{server}
 	rg := server.App.Group("/span")
 	rg.POST("/session", api.createSession)
 	rg.POST("/error", api.createError, NewEnsureSessionMiddleware(api))
@@ -20,7 +20,7 @@ func bindSpanApi(server Server) {
 }
 
 type spanApi struct {
-	server Server
+	Server
 }
 
 func (api *spanApi) createSession(c echo.Context) error {
@@ -32,7 +32,7 @@ func (api *spanApi) createSession(c echo.Context) error {
 		c.Logger().Error(err)
 		return err
 	}
-	session, err := api.server.Dao.CreateSession(sessionDTO)
+	session, err := api.Dao.CreateSession(sessionDTO)
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
@@ -51,7 +51,7 @@ func (api *spanApi) createError(c echo.Context) error {
 		return err
 	}
 	session := GetSessionUUID(c)
-	_, err := api.server.Dao.CreateJSError(session, dto)
+	_, err := api.Dao.CreateJSError(session, dto)
 	return handleDaoAndResponse(c, err)
 }
 
@@ -61,7 +61,7 @@ func (api *spanApi) createHTTP(c echo.Context) error {
 		return err
 	}
 	session := GetSessionUUID(c)
-	_, err := api.server.Dao.CreateHTTP(session, dto)
+	_, err := api.Dao.CreateHTTP(session, dto)
 	return handleDaoAndResponse(c, err)
 }
 
@@ -71,7 +71,7 @@ func (api *spanApi) createEvent(c echo.Context) error {
 		return err
 	}
 	session := GetSessionUUID(c)
-	_, err := api.server.Dao.CreateEvent(session, dto)
+	_, err := api.Dao.CreateEvent(session, dto)
 	return handleDaoAndResponse(c, err)
 }
 
@@ -81,7 +81,7 @@ func (api *spanApi) createPerformance(c echo.Context) error {
 		return err
 	}
 	session := GetSessionUUID(c)
-	_, err := api.server.Dao.CreatePerformance(session, dto)
+	_, err := api.Dao.CreatePerformance(session, dto)
 	return handleDaoAndResponse(c, err)
 }
 
@@ -91,7 +91,7 @@ func (api *spanApi) createPageView(c echo.Context) error {
 		return err
 	}
 	session := GetSessionUUID(c)
-	_, err := api.server.Dao.CreatePageView(session, dto)
+	_, err := api.Dao.CreatePageView(session, dto)
 	return handleDaoAndResponse(c, err)
 }
 
