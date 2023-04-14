@@ -14,7 +14,10 @@
     "prettier": true,
     "rules": {
       "@typescript-eslint/naming-convention": "off",
-      "import/extensions": "off"
+      "import/extensions": "off",
+      "unicorn/no-array-reduce": "off",
+      "unicorn/filename-case": "off",
+      "n/file-extension-in-import": "off"
     }
   }
 }
