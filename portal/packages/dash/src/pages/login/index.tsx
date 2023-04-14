@@ -1,5 +1,6 @@
 import {Form, Input, Button, message, Layout} from 'antd';
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
+import {useNavigate} from 'react-router-dom';
 import {login} from '../../lib/request';
 
 const {Content} = Layout;
@@ -26,13 +27,15 @@ type FormValues = {
 };
 
 function LoginForm() {
+	const navigate = useNavigate();
 	const onFinish = async (values: FormValues) => {
 		try {
 			await login(values.name, values.password);
-			await message.success('Login success!');
+			await message.success('Login success');
+			navigate('/');
 		} catch (error) {
 			console.error(error);
-			await message.error('Login failed!');
+			await message.error('Login failed');
 		}
 	};
 

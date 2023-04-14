@@ -104,7 +104,7 @@ func TestCreateSpan(t *testing.T) {
 				Method:   randomHttpMethod(),
 				Headers:  "Content-Type: application/json",
 				Status:   http.StatusInternalServerError,
-				Data:     "",
+				Body:     "",
 				Response: "",
 			})),
 			ExpectedStatus: http.StatusNoContent,

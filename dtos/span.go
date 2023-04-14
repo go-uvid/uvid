@@ -19,7 +19,7 @@ type (
 		Method   string `json:"method" validate:"required"`
 		Headers  string `json:"headers" validate:"required"`
 		Status   int    `json:"status"  validate:"required"`
-		Data     string `json:"data"`
+		Body     string `json:"body"`
 		Response string `json:"response"`
 	}
 	EventDTO struct {

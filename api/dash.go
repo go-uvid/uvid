@@ -9,11 +9,13 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func bindDashApi(server Server) {
 	api := &dashApi{server}
 	rg := server.App.Group("/dash")
+	rg.Use(middleware.CORSWithConfig(middleware.CORSConfig{}))
 	// Configure middleware with the custom claims type
 	config := echojwt.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {

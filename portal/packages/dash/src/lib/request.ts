@@ -1,10 +1,16 @@
 import {buildUrl} from './url';
 
-const authTokenKey = 'authToken';
+const authTokenKey = 'uvid-auth-token';
 
 function getAuthorization() {
 	const token = localStorage.getItem(authTokenKey);
 	return token ? `Bearer ${token}` : '';
+}
+
+export class RequestError extends Error {
+	constructor(public message: string, public status: number) {
+		super(message);
+	}
 }
 
 export async function apiRequest<T = any>(
@@ -12,7 +18,7 @@ export async function apiRequest<T = any>(
 	url: string,
 	body?: string,
 	headers?: Record<string, unknown>,
-): Promise<{ok: boolean; status: number; data: T; error?: any}> {
+): Promise<{ok: boolean; status: number; data: T}> {
 	const response = await fetch(url, {
 		method,
 		cache: 'no-cache',
@@ -31,8 +37,7 @@ export async function apiRequest<T = any>(
 	}
 
 	const text = await response.text();
-	// eslint-disable-next-line @typescript-eslint/no-throw-literal
-	throw {ok: response.ok, status: response.status, error: text};
+	throw new RequestError(text, response.status);
 }
 
 export async function get<T>(

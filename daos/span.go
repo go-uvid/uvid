@@ -63,7 +63,7 @@ func (dao *Dao) CreateHTTP(sessionUUID uuid.UUID, dto *dtos.HTTPDTO) (*models.HT
 		Method:      dto.Method,
 		Headers:     dto.Headers,
 		Status:      dto.Status,
-		Data:        dto.Data,
+		Body:        dto.Body,
 		Response:    dto.Response,
 	}
 	err := dao.DB.Create(&model).Error

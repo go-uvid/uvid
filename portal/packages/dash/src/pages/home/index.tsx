@@ -1,8 +1,10 @@
 import {Layout} from 'antd';
+import {usePageview} from '../../lib/useApi';
 
 const {Content} = Layout;
 
 export function Home() {
+	usePageview();
 	return (
 		<Layout
 			className="flex justify-center items-center"

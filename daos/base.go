@@ -32,7 +32,8 @@ func New(dsn string) *Dao {
 }
 
 func (dao *Dao) TimeRange(start time.Time, end time.Time) *gorm.DB {
-	return dao.DB.Where("created_at >= ? AND created_at < ?", start, end).Session(&gorm.Session{})
+	// FIXME looks like: sqlite store time in local time, but client request in ISO time, so we need to convert it to local time before query
+	return dao.DB.Where("created_at >= ? AND created_at < ?", start.Local(), end.Local()).Session(&gorm.Session{})
 }
 
 const rootUserName = "root"

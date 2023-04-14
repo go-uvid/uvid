@@ -11,9 +11,14 @@ type (
 		Password string `json:"password" validate:"required"`
 	}
 	TimeRangeDTO struct {
-		Start time.Time `json:"start" validate:"required"`
-		End   time.Time `json:"end" validate:"required"`
-		Unit  string    `json:"unit" validate:"required"`
+		Start time.Time `query:"start" validate:"required"`
+		End   time.Time `query:"end" validate:"required"`
+		Unit  string    `query:"unit" validate:"required"`
+	}
+
+	IntervalData struct {
+		X string `json:"x" validate:"required"`
+		Y int64  `json:"y" validate:"required"`
 	}
 )
 

@@ -41,7 +41,7 @@ type HTTP struct {
 	Method   string `gorm:"not null"`
 	Headers  string `gorm:"not null"`
 	Status   int    `gorm:"not null"`
-	Data     string
+	Body     string
 	Response string
 
 	SessionUUID uuid.UUID `gorm:"not null"`

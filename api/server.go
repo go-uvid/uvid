@@ -24,6 +24,7 @@ func New(dsn string) Server {
 		App: echo.New(),
 		Dao: daos.New(dsn),
 	}
+	// daos.Seed(dsn)
 	err := server.Dao.InitializeDB()
 	if err != nil {
 		panic(err)
@@ -35,7 +36,6 @@ func New(dsn string) Server {
 
 	server.App.Validator = &dtos.CustomValidator{Validator: validator.New()}
 
-	server.App.Use(middleware.CORSWithConfig(middleware.CORSConfig{}))
 	server.App.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(50)))
 	server.App.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
 		Timeout: time.Minute,

@@ -1,6 +1,7 @@
 package daos
 
 import (
+	"luvsic3/uvid/dtos"
 	"luvsic3/uvid/models"
 	"luvsic3/uvid/tools"
 
@@ -18,10 +19,7 @@ func (dao *Dao) FindPageViewCount(db *gorm.DB) (int64, error) {
 	return count, err
 }
 
-type IntervalData struct {
-	X string
-	Y int64
-}
+type IntervalData = dtos.IntervalData
 
 const hourAndCountColumn = "strftime('%Y-%m-%d %H:00:00', datetime(created_at, 'localtime')) as x, COUNT(*) as y"
 const dayAndCountColumn = "strftime('%Y-%m-%d', datetime(created_at, 'localtime')) as x, COUNT(*) as y"
