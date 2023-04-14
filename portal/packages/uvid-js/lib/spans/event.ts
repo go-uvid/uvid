@@ -1,5 +1,5 @@
 import {request} from '../session';
-import {type EventDTO} from '../types/span';
+import { EventDTO } from '../types/span';
 
 export async function event(action: string, value?: string) {
 	const span: EventDTO = {
