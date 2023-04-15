@@ -3,6 +3,7 @@ package daos_test
 import (
 	"luvsic3/uvid/daos"
 	"luvsic3/uvid/models"
+	"luvsic3/uvid/tools"
 	"testing"
 	"time"
 
@@ -15,7 +16,7 @@ func TestFindPageViewInterval(t *testing.T) {
 	dao := NewInMemoryDao()
 	db := dao.DB
 
-	results, _ := dao.FindPageViewInterval(dao.TimeRange(time.Time{}, time.Now()), true)
+	results, _ := dao.FindPageViewInterval(dao.SpanFilter(time.Time{}, time.Now()), tools.UnitHour)
 	assert.Empty(t, results)
 
 	startTime := truncateToday()
@@ -25,7 +26,7 @@ func TestFindPageViewInterval(t *testing.T) {
 	db.Create(&models.PageView{URL: "", Model: gorm.Model{CreatedAt: startTime}})
 	db.Create(&models.PageView{URL: "", Model: gorm.Model{CreatedAt: endTime}})
 
-	results, _ = dao.FindPageViewInterval(dao.TimeRange(startTime, startTime.Add(time.Hour)), true)
+	results, _ = dao.FindPageViewInterval(dao.SpanFilter(startTime, startTime.Add(time.Hour)), tools.UnitHour)
 	result := results[0]
 
 	assert.Len(t, results, 1)
@@ -45,7 +46,7 @@ func TestFindAveragePerformanceInterval(t *testing.T) {
 	db.Create(&models.Performance{Name: models.LCP, Value: 300, Model: gorm.Model{CreatedAt: endTime}})
 
 	// Test by finding the average performance interval for the last hour
-	results, _ := dao.FindAveragePerformanceInterval(dao.TimeRange(endTime, endTime.Add(time.Hour)))
+	results, _ := dao.FindAveragePerformanceInterval(dao.SpanFilter(endTime, endTime.Add(time.Hour)))
 	result := results[0]
 
 	// Check that the result is as expected
@@ -67,7 +68,7 @@ func TestFindHTTPErrorInterval(t *testing.T) {
 	db.Create(&models.HTTP{Status: 500, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour * 2)}})
 
 	// Test by finding the HTTP error interval for the last hour
-	results, _ := dao.FindHTTPErrorInterval(dao.TimeRange(startTime.Add(time.Hour), startTime.Add(time.Hour*2)), true)
+	results, _ := dao.FindHTTPErrorInterval(dao.SpanFilter(startTime.Add(time.Hour), startTime.Add(time.Hour*2)), tools.UnitHour)
 	result := results[0]
 
 	// Check that the result is as expected
@@ -94,13 +95,103 @@ func TestFindUniqueVisitorInterval(t *testing.T) {
 	db.Create(&models.PageView{URL: "", SessionUUID: uuid3, Model: gorm.Model{CreatedAt: endTime}})
 
 	// Test by finding the unique visitor interval for the last 2 hours
-	tr := dao.TimeRange(startTime, endTime)
-	results, _ := dao.FindUniqueVisitorInterval(tr, false)
+	tr := dao.SpanFilter(startTime, endTime)
+	results, _ := dao.FindUniqueVisitorInterval(tr, tools.UnitDay)
 
 	assert.Len(t, results, 2)
 	// Check that the result is as expected
 	assert.Equal(t, results[0].X, startTime.Format(time.DateOnly))
 	assert.Equal(t, results[0].Y, int64(1))
+
+	assert.Equal(t, results[1].X, midTime.Format(time.DateOnly))
+	assert.Equal(t, results[1].Y, int64(2))
+}
+
+// test dao.FindEventInterval
+func TestFindEventInterval(t *testing.T) {
+	dao := NewInMemoryDao()
+	db := dao.DB
+
+	// Create some performance span with different session ids
+	startTime := truncateToday()
+	midTime := startTime.AddDate(0, 0, 1)
+	endTime := startTime.AddDate(0, 0, 3)
+	uuid1 := uuid.New()
+	const registerAction = "register"
+	const loginAction = "login"
+
+	db.Create(&models.Event{Action: registerAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: startTime}})
+	db.Create(&models.Event{Action: registerAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour)}})
+	db.Create(&models.Event{Action: registerAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: midTime}})
+	db.Create(&models.Event{Action: loginAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: midTime}})
+	db.Create(&models.Event{Action: loginAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: endTime}})
+
+	tr := dao.SpanFilter(startTime, endTime)
+	results, _ := dao.FindEventInterval(tr)
+
+	assert.Len(t, results, 2)
+	// Check that the result is as expected
+	assert.Equal(t, results[0].X, registerAction)
+	assert.Equal(t, results[0].Y, int64(3))
+
+	assert.Equal(t, results[1].X, loginAction)
+	assert.Equal(t, results[1].Y, int64(1))
+}
+
+// test dao.FindJSErrorInterval
+func TestFindJSErrorInterval(t *testing.T) {
+	dao := NewInMemoryDao()
+	db := dao.DB
+
+	// Create some performance span with different session ids
+	startTime := truncateToday()
+	midTime := startTime.AddDate(0, 0, 1)
+	endTime := startTime.AddDate(0, 0, 3)
+	uuid1 := uuid.New()
+	db.Create(&models.JSError{
+		Name:        "error",
+		Message:     "Something went wrong",
+		Stack:       "Error: Something went wrong",
+		SessionUUID: uuid1,
+		Model:       gorm.Model{CreatedAt: startTime},
+	})
+	db.Create(&models.JSError{
+		Name:        "error",
+		Message:     "Something went wrong",
+		Stack:       "Error: Something went wrong",
+		SessionUUID: uuid1,
+		Model:       gorm.Model{CreatedAt: startTime.Add(time.Hour)},
+	})
+	db.Create(&models.JSError{
+		Name:        "error",
+		Message:     "Something went wrong",
+		Stack:       "Error: Something went wrong",
+		SessionUUID: uuid1,
+		Model:       gorm.Model{CreatedAt: midTime},
+	})
+	db.Create(&models.JSError{
+		Name:        "error",
+		Message:     "Something went wrong",
+		Stack:       "Error: Something went wrong",
+		SessionUUID: uuid1,
+		Model:       gorm.Model{CreatedAt: midTime},
+	})
+	db.Create(&models.JSError{
+		Name:        "error",
+		Message:     "Something went wrong",
+		Stack:       "Error: Something went wrong",
+		SessionUUID: uuid1,
+		Model:       gorm.Model{CreatedAt: endTime},
+	})
+
+	// Test by finding the unique visitor interval for the last 2 hours
+	tr := dao.SpanFilter(startTime, endTime)
+	results, _ := dao.FindJSErrorInterval(tr, tools.UnitDay)
+
+	assert.Len(t, results, 2)
+	// Check that the result is as expected
+	assert.Equal(t, results[0].X, startTime.Format(time.DateOnly))
+	assert.Equal(t, results[0].Y, int64(2))
 
 	assert.Equal(t, results[1].X, midTime.Format(time.DateOnly))
 	assert.Equal(t, results[1].Y, int64(2))

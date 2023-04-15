@@ -1,6 +1,7 @@
 package daos
 
 import (
+	"fmt"
 	"luvsic3/uvid/dtos"
 	"luvsic3/uvid/models"
 	"luvsic3/uvid/tools"
@@ -8,30 +9,56 @@ import (
 	"gorm.io/gorm"
 )
 
-func IsPageView(db *gorm.DB) *gorm.DB {
+type TimeFormat string
+
+const (
+	FormatHour  TimeFormat = "%Y-%m-%d %H:00:00"
+	FormatDay   TimeFormat = "%Y-%m-%d"
+	FormatMonth TimeFormat = "%Y-%m"
+	FormatYear  TimeFormat = "%Y"
+)
+
+func unitToTimeFormat(unit tools.Unit) TimeFormat {
+	switch unit {
+	case tools.UnitHour:
+		return FormatHour
+	case tools.UnitDay:
+		return FormatDay
+	case tools.UnitMonth:
+		return FormatMonth
+	case tools.UnitYear:
+		return FormatYear
+	default:
+		return FormatDay
+	}
+}
+
+const DistinctSession = "DISTINCT session_uuid"
+
+func isPageView(db *gorm.DB) *gorm.DB {
 	return db.Model(models.PageView{})
+}
+
+func selectColumn(uniqueSession bool, unit tools.Unit) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Select(fmt.Sprintf("strftime('%s', datetime(created_at, 'localtime')) as x, COUNT(%s) as y", unitToTimeFormat(unit), tools.Ternary(uniqueSession, DistinctSession, "*")))
+	}
 }
 
 func (dao *Dao) FindPageViewCount(db *gorm.DB) (int64, error) {
 	var count int64
-	err := db.Scopes(IsPageView).
+	err := db.Scopes(isPageView).
 		Count(&count).Error
 	return count, err
 }
 
 type IntervalData = dtos.IntervalData
 
-const hourAndCountColumn = "strftime('%Y-%m-%d %H:00:00', datetime(created_at, 'localtime')) as x, COUNT(*) as y"
-const dayAndCountColumn = "strftime('%Y-%m-%d', datetime(created_at, 'localtime')) as x, COUNT(*) as y"
-const hourAndUniqueCountColumn = "strftime('%Y-%m-%d %H:00:00', datetime(created_at, 'localtime')) as x, COUNT(DISTINCT session_uuid) as y"
-const dayAndUniqueCountColumn = "strftime('%Y-%m-%d', datetime(created_at, 'localtime')) as x, COUNT(DISTINCT session_uuid) as y"
-
 // findPageViews returns the number of page views in the given time range
-func (dao *Dao) FindPageViewInterval(db *gorm.DB, byHour bool) ([]IntervalData, error) {
+func (dao *Dao) FindPageViewInterval(db *gorm.DB, unit tools.Unit) ([]IntervalData, error) {
 	var results []IntervalData
 
-	err := db.Scopes(IsPageView).
-		Select(tools.Ternary(byHour, hourAndCountColumn, dayAndCountColumn)).
+	err := db.Scopes(isPageView, selectColumn(false, unit)).
 		Group("x").
 		Order("x ASC").
 		Scan(&results).Error
@@ -40,11 +67,10 @@ func (dao *Dao) FindPageViewInterval(db *gorm.DB, byHour bool) ([]IntervalData, 
 }
 
 // findUniqueVisitors returns the number of unique visitors in the given time range
-func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, byHour bool) ([]IntervalData, error) {
+func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, unit tools.Unit) ([]IntervalData, error) {
 	var results []IntervalData
 
-	err := db.Scopes(IsPageView).
-		Select(tools.Ternary(byHour, hourAndUniqueCountColumn, dayAndUniqueCountColumn)).
+	err := db.Scopes(isPageView, selectColumn(true, unit)).
 		Group("x").
 		Order("x ASC").
 		Scan(&results).Error
@@ -53,7 +79,7 @@ func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, byHour bool) ([]IntervalD
 
 func (dao *Dao) FindUniqueVisitorCount(db *gorm.DB) (int64, error) {
 	var count int64
-	err := db.Scopes(IsPageView).
+	err := db.Scopes(isPageView).
 		Distinct("session_uuid").
 		Count(&count).Error
 	return count, err
@@ -73,8 +99,9 @@ func (dao *Dao) FindAveragePerformanceInterval(db *gorm.DB) ([]IntervalData, err
 func (dao *Dao) FindEventInterval(db *gorm.DB) ([]IntervalData, error) {
 	var results []IntervalData
 	err := db.Model(&models.Event{}).
-		Select("name as x, COUNT(*) as y").
-		Group("name").
+		Select("action as x, COUNT(*) as y").
+		Group("action").
+		Order("y DESC").
 		Scan(&results).Error
 	return results, err
 }
@@ -87,11 +114,11 @@ func (dao *Dao) FindJSErrorCount(db *gorm.DB) (int64, error) {
 }
 
 // findJSErrors returns the number of JS errors in the given time range
-func (dao *Dao) FindJSErrorInterval(db *gorm.DB, byHour bool) ([]IntervalData, error) {
+func (dao *Dao) FindJSErrorInterval(db *gorm.DB, unit tools.Unit) ([]IntervalData, error) {
 	var results []IntervalData
 
 	err := db.Model(&models.JSError{}).
-		Select(tools.Ternary(byHour, hourAndCountColumn, dayAndCountColumn)).
+		Scopes(selectColumn(false, unit)).
 		Group("x").
 		Order("x ASC").
 		Scan(&results).Error
@@ -105,11 +132,11 @@ func (dao *Dao) FindHTTPErrorCount(db *gorm.DB) (int64, error) {
 }
 
 // findHTTPErrors returns the number of HTTP errors in the given time range
-func (dao *Dao) FindHTTPErrorInterval(db *gorm.DB, byHour bool) ([]IntervalData, error) {
+func (dao *Dao) FindHTTPErrorInterval(db *gorm.DB, unit tools.Unit) ([]IntervalData, error) {
 	var results []IntervalData
 
 	err := db.Model(&models.HTTP{}).
-		Select(tools.Ternary(byHour, hourAndCountColumn, dayAndCountColumn)).
+		Scopes(selectColumn(false, unit)).
 		Where("status < ? or status > ?", 200, 299).
 		Group("x").
 		Order("x ASC").
