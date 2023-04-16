@@ -7,13 +7,8 @@ const {Content} = Layout;
 
 export function Login() {
 	return (
-		<Layout
-			className="flex justify-center items-center"
-			style={{
-				height: '100vh',
-			}}
-		>
-			<Content className="bg-white rounded shadow p-8 w-96 max-h-72">
+		<Layout className="flex justify-center items-center h-screen">
+			<Content className="bg-white rounded shadow p-8 w-96 flex-grow-0">
 				<h1 className="mb-4 text-lg text-black">Login</h1>
 				<LoginForm />
 			</Content>
@@ -31,8 +26,8 @@ function LoginForm() {
 	const onFinish = async (values: FormValues) => {
 		try {
 			await login(values.name, values.password);
-			await message.success('Login success');
 			navigate('/');
+			await message.success('Login success');
 		} catch (error) {
 			console.error(error);
 			await message.error('Login failed');
@@ -70,15 +65,9 @@ function LoginForm() {
 					/>
 				</Form.Item>
 
-				<Form.Item>
-					<Button
-						type="primary"
-						htmlType="submit"
-						className="login-form-button"
-					>
-						Log in
-					</Button>
-				</Form.Item>
+				<Button type="primary" htmlType="submit" className="login-form-button">
+					Log in
+				</Button>
 			</Form>
 		</div>
 	);

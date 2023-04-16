@@ -41,9 +41,9 @@ func TestFindAveragePerformanceInterval(t *testing.T) {
 	// Create some performance span with different values
 	startTime := truncateToday()
 	endTime := startTime.AddDate(0, 0, 1)
-	db.Create(&models.Performance{Name: models.LCP, Value: 100, Model: gorm.Model{CreatedAt: startTime}})
-	db.Create(&models.Performance{Name: models.LCP, Value: 200, Model: gorm.Model{CreatedAt: endTime}})
-	db.Create(&models.Performance{Name: models.LCP, Value: 300, Model: gorm.Model{CreatedAt: endTime}})
+	db.Create(&models.Performance{Name: models.LCP, Value: 1.2, Model: gorm.Model{CreatedAt: startTime}})
+	db.Create(&models.Performance{Name: models.LCP, Value: 2.1, Model: gorm.Model{CreatedAt: endTime}})
+	db.Create(&models.Performance{Name: models.LCP, Value: 3.2, Model: gorm.Model{CreatedAt: endTime}})
 
 	// Test by finding the average performance interval for the last hour
 	results, _ := dao.FindAveragePerformanceInterval(dao.SpanFilter(endTime, endTime.Add(time.Hour)))

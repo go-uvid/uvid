@@ -13,13 +13,15 @@ export class RequestError extends Error {
 	}
 }
 
+const host = import.meta.env.DEV ? 'http://localhost:3000' : '';
+
 export async function apiRequest<T = any>(
 	method: string,
 	url: string,
 	body?: string,
 	headers?: Record<string, unknown>,
 ): Promise<{ok: boolean; status: number; data: T}> {
-	const response = await fetch(url, {
+	const response = await fetch(host + url, {
 		method,
 		cache: 'no-cache',
 		headers: {
@@ -45,7 +47,13 @@ export async function get<T>(
 	parameters?: Record<string, unknown>,
 	headers?: Record<string, unknown>,
 ) {
-	return apiRequest<T>('get', buildUrl(url, parameters), undefined, headers);
+	const response = await apiRequest<T>(
+		'get',
+		buildUrl(url, parameters),
+		undefined,
+		headers,
+	);
+	return response.data;
 }
 
 export async function del<T>(
@@ -53,7 +61,13 @@ export async function del<T>(
 	parameters?: Record<string, unknown>,
 	headers?: Record<string, unknown>,
 ) {
-	return apiRequest<T>('delete', buildUrl(url, parameters), undefined, headers);
+	const response = await apiRequest<T>(
+		'delete',
+		buildUrl(url, parameters),
+		undefined,
+		headers,
+	);
+	return response.data;
 }
 
 export async function post<T>(
@@ -61,7 +75,13 @@ export async function post<T>(
 	parameters?: Record<string, unknown>,
 	headers?: Record<string, unknown>,
 ) {
-	return apiRequest<T>('post', url, JSON.stringify(parameters), headers);
+	const response = await apiRequest<T>(
+		'post',
+		url,
+		JSON.stringify(parameters),
+		headers,
+	);
+	return response.data;
 }
 
 export async function put<T>(
@@ -69,16 +89,20 @@ export async function put<T>(
 	parameters?: Record<string, unknown>,
 	headers?: Record<string, unknown>,
 ) {
-	return apiRequest<T>('put', url, JSON.stringify(parameters), headers);
+	const response = await apiRequest<T>(
+		'put',
+		url,
+		JSON.stringify(parameters),
+		headers,
+	);
+	return response.data;
 }
 
 export async function login(name: string, password: string) {
 	return post<{token: string}>('/dash/user/login', {name, password}).then(
-		(response) => {
-			if (response.ok) {
-				const {token} = response.data;
-				localStorage.setItem(authTokenKey, token);
-			}
+		(data) => {
+			const {token} = data;
+			localStorage.setItem(authTokenKey, token);
 		},
 	);
 }

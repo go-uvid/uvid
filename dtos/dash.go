@@ -23,7 +23,7 @@ type (
 	}
 
 	IntervalData struct {
-		X string `json:"x" validate:"required"`
-		Y int64  `json:"y" validate:"required"`
+		X string  `json:"x" validate:"required"`
+		Y float64 `json:"y" validate:"required"`
 	}
 )

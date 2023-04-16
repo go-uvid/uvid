@@ -14,4 +14,4 @@ build:
 	GOFLAGS=-mod=mod go build -o bin/uvid main.go
 
 run: 
-	GOFLAGS=-mod=mod go run main.go serve
+	gin --immediate run main.go
