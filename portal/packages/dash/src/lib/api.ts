@@ -21,7 +21,7 @@ export type IntervalData = {
 };
 
 export enum ApiPath {
-	updateUserPassword = '/dash/user/password',
+	changeUserPassword = '/dash/user/password',
 	getPageview = '/dash/pv',
 	getPageviewCount = '/dash/pv/count',
 	getUniqueVisitor = '/dash/uv',
@@ -34,8 +34,12 @@ export enum ApiPath {
 	getEvent = '/dash/event',
 }
 
-export async function updateUserPassword(data: {password: string}) {
-	return post<void>(ApiPath.updateUserPassword, data);
+export type ChangePasswordPayload = {
+	currentPassword: string;
+	newPassword: string;
+};
+export async function changeUserPassword(data: ChangePasswordPayload) {
+	return post<void>(ApiPath.changeUserPassword, data);
 }
 
 export async function getPageview(timeRange: TimeRangeDTO) {

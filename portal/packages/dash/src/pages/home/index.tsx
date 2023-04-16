@@ -49,8 +49,6 @@ export function Home() {
 		setIntervalType(type);
 	}
 
-	console.log('intervalData :>>', intervalData);
-
 	return (
 		<Layout>
 			<header className="sticky top-0 w-screen">
@@ -131,13 +129,13 @@ export function Home() {
 						/>
 					</Card.Grid>
 					<Card.Grid style={gridStyle} hoverable={false}>
-						<Statistic title="LCP" value={performance?.LCP} />
+						<Statistic title="LCP" value={performance?.LCP} suffix="s" />
 					</Card.Grid>
 					<Card.Grid style={gridStyle} hoverable={false}>
-						<Statistic title="CLS" value={performance?.CLS} />
+						<Statistic title="CLS" value={performance?.CLS} suffix="s" />
 					</Card.Grid>
 					<Card.Grid style={gridStyle} hoverable={false}>
-						<Statistic title="FID" value={performance?.FID} />
+						<Statistic title="FID" value={performance?.FID} suffix="s" />
 					</Card.Grid>
 					<IntervalLineChart data={intervalData} />
 				</Card>

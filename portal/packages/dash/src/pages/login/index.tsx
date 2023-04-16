@@ -35,40 +35,35 @@ function LoginForm() {
 	};
 
 	return (
-		<div className="form-wrapper">
-			<Form name="normal_login" className="login-form" onFinish={onFinish}>
-				<Form.Item
-					name="name"
-					rules={[
-						{
-							required: true,
-						},
-					]}
-				>
-					<Input
-						prefix={<UserOutlined className="site-form-item-icon" />}
-						placeholder="Username"
-					/>
-				</Form.Item>
-				<Form.Item
-					name="password"
-					rules={[
-						{
-							required: true,
-						},
-					]}
-				>
-					<Input.Password
-						prefix={<LockOutlined className="site-form-item-icon" />}
-						type="password"
-						placeholder="Password"
-					/>
-				</Form.Item>
+		<Form onFinish={onFinish}>
+			<Form.Item
+				name="name"
+				rules={[
+					{
+						required: true,
+					},
+				]}
+			>
+				<Input prefix={<UserOutlined />} placeholder="Username" />
+			</Form.Item>
+			<Form.Item
+				name="password"
+				rules={[
+					{
+						required: true,
+					},
+				]}
+			>
+				<Input.Password
+					prefix={<LockOutlined />}
+					type="password"
+					placeholder="Password"
+				/>
+			</Form.Item>
 
-				<Button type="primary" htmlType="submit" className="login-form-button">
-					Log in
-				</Button>
-			</Form>
-		</div>
+			<Button type="primary" htmlType="submit">
+				Login
+			</Button>
+		</Form>
 	);
 }

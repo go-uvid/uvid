@@ -10,8 +10,9 @@ type (
 		Name     string `json:"name" validate:"required"`
 		Password string `json:"password" validate:"required"`
 	}
-	UpdatePasswordDTO struct {
-		Password string `json:"password" validate:"required"`
+	ChangePasswordDTO struct {
+		CurrentPassword string `json:"currentPassword" validate:"required"`
+		NewPassword     string `json:"newPassword" validate:"required"`
 	}
 	SpanFilterDTO struct {
 		Start time.Time `query:"start" validate:"required"`

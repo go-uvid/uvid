@@ -27,7 +27,7 @@ func bindDashApi(server Server) {
 	rg.Use(echojwt.WithConfig(config))
 
 	rg.POST("/user/login", api.loginUser)
-	rg.POST("/user/password", api.updateUserPassword)
+	rg.POST("/user/password", api.changeUserPassword)
 	rg.GET("/pv", api.pageview)
 	rg.GET("/pv/count", api.pageviewCount)
 	rg.GET("/uv", api.uniqueVisitor)
@@ -88,16 +88,18 @@ func (api *dashApi) loginUser(c echo.Context) error {
 	})
 }
 
-func (api *dashApi) updateUserPassword(c echo.Context) error {
-	body := &dtos.UpdatePasswordDTO{}
+func (api *dashApi) changeUserPassword(c echo.Context) error {
+	body := &dtos.ChangePasswordDTO{}
 	if err := dtos.BindAndValidateDTO(c, body); err != nil {
 		return err
 	}
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*jwtCustomClaims)
 	name := claims.Name
-	api.Dao.UpdateUserPassword(name, body.Password)
-	return c.NoContent(http.StatusNoContent)
+	if err := api.Dao.ChangeUserPassword(name, body.CurrentPassword, body.NewPassword); err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, nil)
 }
 
 func (api *dashApi) pageview(c echo.Context) error {

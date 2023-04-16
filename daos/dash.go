@@ -158,10 +158,17 @@ func (dao *Dao) GetUserByName(name string) (models.User, error) {
 }
 
 // findHTTPErrors returns the number of HTTP errors in the given time range
-func (dao *Dao) UpdateUserPassword(name string, password string) error {
+func (dao *Dao) ChangeUserPassword(name string, currentPassword, newPassword string) error {
 	user := models.User{
 		Name: name,
 	}
-
-	return dao.DB.Where(user).Update("password", password).Error
+	dao.DB.Where("name = ?", user.Name).First(&user)
+	if err := tools.ComparePassword(user.Password, currentPassword); err != nil {
+		return err
+	}
+	hashPass, err := tools.HashPassword(newPassword)
+	if err != nil {
+		return err
+	}
+	return dao.DB.Model(&models.User{}).Where(user).Update("password", string(hashPass)).Error
 }

@@ -106,8 +106,8 @@ export type IntervalType = 'uv' | 'pv' | 'jsError' | 'httpError';
 function thisWeek(): [string, string, TimeRange] {
 	const now = dayjs();
 	return [
-		now.startOf('month').toISOString(),
-		now.endOf('month').toISOString(),
-		'thisMonth',
+		now.startOf('week').toISOString(),
+		now.endOf('week').toISOString(),
+		'thisWeek',
 	];
 }
