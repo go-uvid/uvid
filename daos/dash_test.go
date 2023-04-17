@@ -31,7 +31,7 @@ func TestFindPageViewInterval(t *testing.T) {
 
 	assert.Len(t, results, 1)
 	assert.Equal(t, result.X, startTime.Truncate(time.Hour).Format(time.DateTime))
-	assert.Equal(t, result.Y, int64(2))
+	assert.Equal(t, result.Y, float64(2))
 }
 
 func TestFindAveragePerformanceInterval(t *testing.T) {
@@ -41,9 +41,9 @@ func TestFindAveragePerformanceInterval(t *testing.T) {
 	// Create some performance span with different values
 	startTime := truncateToday()
 	endTime := startTime.AddDate(0, 0, 1)
-	db.Create(&models.Performance{Name: models.LCP, Value: 1.2, Model: gorm.Model{CreatedAt: startTime}})
-	db.Create(&models.Performance{Name: models.LCP, Value: 2.1, Model: gorm.Model{CreatedAt: endTime}})
-	db.Create(&models.Performance{Name: models.LCP, Value: 3.2, Model: gorm.Model{CreatedAt: endTime}})
+	db.Create(&models.Performance{Name: models.LCP, Value: 1.1, Model: gorm.Model{CreatedAt: startTime}})
+	db.Create(&models.Performance{Name: models.LCP, Value: 2.2, Model: gorm.Model{CreatedAt: endTime}})
+	db.Create(&models.Performance{Name: models.LCP, Value: 3.3, Model: gorm.Model{CreatedAt: endTime}})
 
 	// Test by finding the average performance interval for the last hour
 	results, _ := dao.FindAveragePerformanceInterval(dao.SpanFilter(endTime, endTime.Add(time.Hour)))
@@ -52,7 +52,7 @@ func TestFindAveragePerformanceInterval(t *testing.T) {
 	// Check that the result is as expected
 	assert.Len(t, results, 1)
 	assert.Equal(t, result.X, models.LCP)
-	assert.InDelta(t, result.Y, float64((200+300)/2), 0.01)
+	assert.InDelta(t, result.Y, float64((2.2+3.3)/2), 0.01)
 }
 
 func TestFindHTTPErrorInterval(t *testing.T) {
@@ -74,7 +74,7 @@ func TestFindHTTPErrorInterval(t *testing.T) {
 	// Check that the result is as expected
 	assert.Len(t, results, 1)
 	assert.Equal(t, result.X, startTime.Add(time.Hour).Truncate(time.Hour).Format(time.DateTime))
-	assert.Equal(t, result.Y, int64(2))
+	assert.Equal(t, result.Y, float64(2))
 }
 
 func TestFindUniqueVisitorInterval(t *testing.T) {
@@ -101,10 +101,10 @@ func TestFindUniqueVisitorInterval(t *testing.T) {
 	assert.Len(t, results, 2)
 	// Check that the result is as expected
 	assert.Equal(t, results[0].X, startTime.Format(time.DateOnly))
-	assert.Equal(t, results[0].Y, int64(1))
+	assert.Equal(t, results[0].Y, float64(1))
 
 	assert.Equal(t, results[1].X, midTime.Format(time.DateOnly))
-	assert.Equal(t, results[1].Y, int64(2))
+	assert.Equal(t, results[1].Y, float64(2))
 }
 
 // test dao.FindEventInterval
@@ -132,10 +132,10 @@ func TestFindEventInterval(t *testing.T) {
 	assert.Len(t, results, 2)
 	// Check that the result is as expected
 	assert.Equal(t, results[0].X, registerAction)
-	assert.Equal(t, results[0].Y, int64(3))
+	assert.Equal(t, results[0].Y, float64(3))
 
 	assert.Equal(t, results[1].X, loginAction)
-	assert.Equal(t, results[1].Y, int64(1))
+	assert.Equal(t, results[1].Y, float64(1))
 }
 
 // test dao.FindJSErrorInterval
@@ -191,10 +191,10 @@ func TestFindJSErrorInterval(t *testing.T) {
 	assert.Len(t, results, 2)
 	// Check that the result is as expected
 	assert.Equal(t, results[0].X, startTime.Format(time.DateOnly))
-	assert.Equal(t, results[0].Y, int64(2))
+	assert.Equal(t, results[0].Y, float64(2))
 
 	assert.Equal(t, results[1].X, midTime.Format(time.DateOnly))
-	assert.Equal(t, results[1].Y, int64(2))
+	assert.Equal(t, results[1].Y, float64(2))
 }
 
 func truncateToday() time.Time {
