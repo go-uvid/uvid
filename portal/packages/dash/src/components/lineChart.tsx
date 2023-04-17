@@ -9,6 +9,7 @@ import {
 } from 'recharts';
 import {Empty} from 'antd';
 import {type IntervalData} from '../lib/api';
+import {Theme} from '../lib/theme';
 
 export function IntervalLineChart(props: {data?: IntervalData[]}) {
 	const {data} = props;
@@ -34,7 +35,7 @@ export function IntervalLineChart(props: {data?: IntervalData[]}) {
 					<Line
 						type="monotone"
 						dataKey="y"
-						stroke="#1890ff"
+						stroke={Theme.color.primary}
 						activeDot={{r: 8}}
 					/>
 				</LineChart>

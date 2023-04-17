@@ -9,6 +9,9 @@ const config = {
 			colors: {
 				primary: '#1890ff',
 			},
+			textColor: {
+				primary: 'rgba(0,0,0,.85)',
+			},
 		},
 	},
 	plugins: [],

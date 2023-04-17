@@ -1,9 +1,10 @@
-import {Card, Layout, Select, Statistic} from 'antd';
+import {Card, Col, Divider, Grid, Layout, Row, Select, Statistic} from 'antd';
 import {useAtom} from 'jotai';
 import {type PropsWithChildren} from 'react';
 import {
 	useAvgPerformance,
 	useErrorCount,
+	useEvent,
 	useHttpErrorCount,
 	useIntervalData,
 	usePageviewCount,
@@ -16,6 +17,7 @@ import {
 	type IntervalType,
 } from '../../store';
 import {IntervalLineChart} from '../../components/lineChart';
+import {GroupBarChart} from '../../components/barChart';
 
 const {Content, Header} = Layout;
 const gridStyle: React.CSSProperties = {
@@ -40,6 +42,7 @@ export function Home() {
 	const {data: errorCount} = useErrorCount();
 	const {data: httpErrorCount} = useHttpErrorCount();
 	const {data: performance} = useAvgPerformance();
+	const {data: events} = useEvent();
 
 	function handleChange(value: TimeRange) {
 		setTimeRange(value);
@@ -138,6 +141,16 @@ export function Home() {
 						<Statistic title="FID" value={performance?.FID} suffix="s" />
 					</Card.Grid>
 					<IntervalLineChart data={intervalData} />
+					<Divider />
+					<Row gutter={30} className="w-main">
+						<Col span={8}>
+							<h4 className="flex justify-between px-4">
+								<span className="text-base text-primary">Events</span>
+								<span className="text-base text-primary">Actions count</span>
+							</h4>
+							<GroupBarChart data={events} />
+						</Col>
+					</Row>
 				</Card>
 			</Content>
 		</Layout>
