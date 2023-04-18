@@ -54,7 +54,14 @@ func (dao *Dao) FindPageViewCount(db *gorm.DB) (int64, error) {
 
 type IntervalData = dtos.IntervalData
 
-// findPageViews returns the number of page views in the given time range
+func (dao *Dao) FindPageViews(db *gorm.DB) ([]dtos.PageViewDTO, error) {
+	var results []dtos.PageViewDTO
+
+	err := db.Scopes(isPageView).Scan(&results).Error
+
+	return results, err
+}
+
 func (dao *Dao) FindPageViewInterval(db *gorm.DB, unit tools.Unit) ([]IntervalData, error) {
 	var results []IntervalData
 
@@ -66,7 +73,13 @@ func (dao *Dao) FindPageViewInterval(db *gorm.DB, unit tools.Unit) ([]IntervalDa
 	return results, err
 }
 
-// findUniqueVisitors returns the number of unique visitors in the given time range
+func (dao *Dao) FindSessions(db *gorm.DB) ([]dtos.SessionDTO, error) {
+	var results []dtos.SessionDTO
+
+	err := db.Model(&models.Session{}).Scan(&results).Error
+	return results, err
+}
+
 func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, unit tools.Unit) ([]IntervalData, error) {
 	var results []IntervalData
 
@@ -85,7 +98,6 @@ func (dao *Dao) FindUniqueVisitorCount(db *gorm.DB) (int64, error) {
 	return count, err
 }
 
-// findAveragePerformance returns the average performance spans in the given time range
 func (dao *Dao) FindAveragePerformanceInterval(db *gorm.DB) ([]IntervalData, error) {
 	var results []IntervalData
 	err := db.Model(&models.Performance{}).
@@ -95,7 +107,6 @@ func (dao *Dao) FindAveragePerformanceInterval(db *gorm.DB) ([]IntervalData, err
 	return results, err
 }
 
-// findEvents returns the number of events in the given time range
 func (dao *Dao) FindEventInterval(db *gorm.DB) ([]IntervalData, error) {
 	var results []IntervalData
 	err := db.Model(&models.Event{}).
@@ -113,7 +124,13 @@ func (dao *Dao) FindJSErrorCount(db *gorm.DB) (int64, error) {
 	return count, err
 }
 
-// findJSErrors returns the number of JS errors in the given time range
+func (dao *Dao) FindJSErrors(db *gorm.DB) ([]dtos.ErrorDTO, error) {
+	var results []dtos.ErrorDTO
+
+	err := db.Model(&models.JSError{}).Scan(&results).Error
+	return results, err
+}
+
 func (dao *Dao) FindJSErrorInterval(db *gorm.DB, unit tools.Unit) ([]IntervalData, error) {
 	var results []IntervalData
 
@@ -125,26 +142,33 @@ func (dao *Dao) FindJSErrorInterval(db *gorm.DB, unit tools.Unit) ([]IntervalDat
 	return results, err
 }
 
+func isHTTPError(db *gorm.DB) *gorm.DB {
+	return db.Model(models.HTTP{}).Where("status < ? or status > ?", 200, 299)
+}
+
 func (dao *Dao) FindHTTPErrorCount(db *gorm.DB) (int64, error) {
 	var count int64
-	err := db.Model(models.HTTP{}).Where("status < ? or status > ?", 200, 299).Count(&count).Error
+	err := db.Scopes(isHTTPError).Count(&count).Error
 	return count, err
 }
 
-// findHTTPErrors returns the number of HTTP errors in the given time range
+func (dao *Dao) FindHTTPErrors(db *gorm.DB) ([]dtos.HTTPDTO, error) {
+	var results []dtos.HTTPDTO
+
+	err := db.Scopes(isHTTPError).Scan(&results).Error
+	return results, err
+}
+
 func (dao *Dao) FindHTTPErrorInterval(db *gorm.DB, unit tools.Unit) ([]IntervalData, error) {
 	var results []IntervalData
 
-	err := db.Model(&models.HTTP{}).
-		Scopes(selectColumn(false, unit)).
-		Where("status < ? or status > ?", 200, 299).
+	err := db.Scopes(isHTTPError, selectColumn(false, unit)).
 		Group("x").
 		Order("x ASC").
 		Scan(&results).Error
 	return results, err
 }
 
-// findHTTPErrors returns the number of HTTP errors in the given time range
 func (dao *Dao) GetUserByName(name string) (models.User, error) {
 	user := models.User{
 		Name: name,
@@ -157,7 +181,6 @@ func (dao *Dao) GetUserByName(name string) (models.User, error) {
 	return user, nil
 }
 
-// findHTTPErrors returns the number of HTTP errors in the given time range
 func (dao *Dao) ChangeUserPassword(name string, currentPassword, newPassword string) error {
 	user := models.User{
 		Name: name,

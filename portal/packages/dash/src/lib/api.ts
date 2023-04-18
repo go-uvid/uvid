@@ -22,16 +22,16 @@ export type IntervalData = {
 
 export enum ApiPath {
 	changeUserPassword = '/dash/user/password',
-	getPageviewInterval = '/dash/pv/interval',
-	getPageviewCount = '/dash/pv/count',
-	getUniqueVisitorInterval = '/dash/uv/interval',
-	getUniqueVisitorCount = '/dash/uv/count',
-	getErrorInterval = '/dash/error/interval',
-	getErrorCount = '/dash/error/count',
-	getHttpErrorInterval = '/dash/http/error/interval',
-	getHttpErrorCount = '/dash/http/error/count',
-	getAvgPerformance = '/dash/performance',
-	getEventGroup = '/dash/event/group',
+	getPageviewInterval = '/dash/pvs/interval',
+	getPageviewCount = '/dash/pvs/count',
+	getUniqueVisitorInterval = '/dash/uvs/interval',
+	getUniqueVisitorCount = '/dash/uvs/count',
+	getErrorInterval = '/dash/errors/interval',
+	getErrorCount = '/dash/errors/count',
+	getHttpErrorInterval = '/dash/https/errors/interval',
+	getHttpErrorCount = '/dash/https/errors/count',
+	getAvgPerformance = '/dash/performances',
+	getEventGroup = '/dash/events/group',
 }
 
 export type ChangePasswordPayload = {

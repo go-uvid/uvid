@@ -28,16 +28,25 @@ func bindDashApi(server Server) {
 
 	rg.POST("/user/login", api.loginUser)
 	rg.POST("/user/password", api.changeUserPassword)
-	rg.GET("/pv/interval", api.pageviewInterval)
-	rg.GET("/pv/count", api.pageviewCount)
-	rg.GET("/uv/interval", api.uniqueVisitorInterval)
-	rg.GET("/uv/count", api.uniqueVisitorCount)
-	rg.GET("/error/interval", api.errorInterval)
-	rg.GET("/error/count", api.errorCount)
-	rg.GET("/http/error/interval", api.httpErrorInterval)
-	rg.GET("/http/error/count", api.httpErrorCount)
-	rg.GET("/performance", api.avgPerformance)
-	rg.GET("/event/group", api.eventGroup)
+
+	rg.GET("/pvs", api.pageviews)
+	rg.GET("/pvs/interval", api.pageviewInterval)
+	rg.GET("/pvs/count", api.pageviewCount)
+
+	rg.GET("/uvs/interval", api.uniqueVisitorInterval)
+	rg.GET("/uvs/count", api.uniqueVisitorCount)
+
+	rg.GET("/errors", api.errors)
+	rg.GET("/errors/interval", api.errorInterval)
+	rg.GET("/errors/count", api.errorCount)
+
+	rg.GET("/https/errors", api.httpErrorInterval)
+	rg.GET("/https/errors/interval", api.httpErrorInterval)
+	rg.GET("/https/errors/count", api.httpErrorCount)
+
+	rg.GET("/sessions", api.sessions)
+	rg.GET("/performances", api.avgPerformance)
+	rg.GET("/events/group", api.eventGroup)
 }
 
 type dashApi struct {
@@ -100,6 +109,19 @@ func (api *dashApi) changeUserPassword(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, nil)
+}
+
+func (api *dashApi) pageviews(c echo.Context) error {
+	body := &dtos.SpanFilterDTO{}
+	if err := dtos.BindAndValidateDTO(c, body); err != nil {
+		return err
+	}
+
+	pageviews, err := api.Dao.FindPageViews(api.Dao.SpanFilter(body.Start, body.End))
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, pageviews)
 }
 
 func (api *dashApi) pageviewInterval(c echo.Context) error {
@@ -167,6 +189,19 @@ func (api *dashApi) avgPerformance(c echo.Context) error {
 	return c.JSON(http.StatusOK, interval)
 }
 
+func (api *dashApi) sessions(c echo.Context) error {
+	body := &dtos.SpanFilterDTO{}
+	if err := dtos.BindAndValidateDTO(c, body); err != nil {
+		return err
+	}
+
+	sessions, err := api.Dao.FindSessions(api.Dao.SpanFilter(body.Start, body.End))
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, sessions)
+}
+
 func (api *dashApi) eventGroup(c echo.Context) error {
 	body := &dtos.SpanFilterDTO{}
 	if err := dtos.BindAndValidateDTO(c, body); err != nil {
@@ -178,6 +213,19 @@ func (api *dashApi) eventGroup(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, interval)
+}
+
+func (api *dashApi) errors(c echo.Context) error {
+	body := &dtos.SpanFilterDTO{}
+	if err := dtos.BindAndValidateDTO(c, body); err != nil {
+		return err
+	}
+
+	errors, err := api.Dao.FindJSErrors(api.Dao.SpanFilter(body.Start, body.End))
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, errors)
 }
 
 func (api *dashApi) errorInterval(c echo.Context) error {
@@ -204,6 +252,19 @@ func (api *dashApi) errorCount(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, interval)
+}
+
+func (api *dashApi) httpErrors(c echo.Context) error {
+	body := &dtos.SpanFilterDTO{}
+	if err := dtos.BindAndValidateDTO(c, body); err != nil {
+		return err
+	}
+
+	errors, err := api.Dao.FindHTTPErrors(api.Dao.SpanFilter(body.Start, body.End))
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, errors)
 }
 
 func (api *dashApi) httpErrorInterval(c echo.Context) error {
