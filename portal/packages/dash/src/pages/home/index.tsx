@@ -4,7 +4,7 @@ import {type PropsWithChildren} from 'react';
 import {
 	useAvgPerformance,
 	useErrorCount,
-	useEvent,
+	useEventGroup,
 	useHttpErrorCount,
 	useIntervalData,
 	usePageviewCount,
@@ -42,7 +42,7 @@ export function Home() {
 	const {data: errorCount} = useErrorCount();
 	const {data: httpErrorCount} = useHttpErrorCount();
 	const {data: performance} = useAvgPerformance();
-	const {data: events} = useEvent();
+	const {data: events} = useEventGroup();
 
 	function handleChange(value: TimeRange) {
 		setTimeRange(value);

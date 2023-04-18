@@ -22,16 +22,16 @@ export type IntervalData = {
 
 export enum ApiPath {
 	changeUserPassword = '/dash/user/password',
-	getPageview = '/dash/pv',
+	getPageviewInterval = '/dash/pv/interval',
 	getPageviewCount = '/dash/pv/count',
-	getUniqueVisitor = '/dash/uv',
+	getUniqueVisitorInterval = '/dash/uv/interval',
 	getUniqueVisitorCount = '/dash/uv/count',
-	getError = '/dash/error',
+	getErrorInterval = '/dash/error/interval',
 	getErrorCount = '/dash/error/count',
-	getHttpError = '/dash/http/error',
+	getHttpErrorInterval = '/dash/http/error/interval',
 	getHttpErrorCount = '/dash/http/error/count',
 	getAvgPerformance = '/dash/performance',
-	getEvent = '/dash/event',
+	getEventGroup = '/dash/event/group',
 }
 
 export type ChangePasswordPayload = {
@@ -42,32 +42,32 @@ export async function changeUserPassword(data: ChangePasswordPayload) {
 	return post<void>(ApiPath.changeUserPassword, data);
 }
 
-export async function getPageview(timeRange: TimeRangeDTO) {
-	return get<IntervalData[]>(ApiPath.getPageview, timeRange);
+export async function getPageviewInterval(timeRange: TimeRangeDTO) {
+	return get<IntervalData[]>(ApiPath.getPageviewInterval, timeRange);
 }
 
 export async function getPageviewCount(timeRange: SpanFilter) {
 	return get<number>(ApiPath.getPageviewCount, timeRange);
 }
 
-export async function getUniqueVisitor(timeRange: TimeRangeDTO) {
-	return get<IntervalData[]>(ApiPath.getUniqueVisitor, timeRange);
+export async function getUniqueVisitorInterval(timeRange: TimeRangeDTO) {
+	return get<IntervalData[]>(ApiPath.getUniqueVisitorInterval, timeRange);
 }
 
 export async function getUniqueVisitorCount(timeRange: SpanFilter) {
 	return get<number>(ApiPath.getUniqueVisitorCount, timeRange);
 }
 
-export async function getError(timeRange: TimeRangeDTO) {
-	return get<IntervalData[]>(ApiPath.getError, timeRange);
+export async function getErrorInterval(timeRange: TimeRangeDTO) {
+	return get<IntervalData[]>(ApiPath.getErrorInterval, timeRange);
 }
 
 export async function getErrorCount(timeRange: SpanFilter) {
 	return get<number>(ApiPath.getErrorCount, timeRange);
 }
 
-export async function getHttpError(timeRange: TimeRangeDTO) {
-	return get<IntervalData[]>(ApiPath.getHttpError, timeRange);
+export async function getHttpErrorInterval(timeRange: TimeRangeDTO) {
+	return get<IntervalData[]>(ApiPath.getHttpErrorInterval, timeRange);
 }
 
 export async function getHttpErrorCount(timeRange: SpanFilter) {
@@ -78,6 +78,6 @@ export async function getAvgPerformance(timeRange: SpanFilter) {
 	return get<IntervalData[]>(ApiPath.getAvgPerformance, timeRange);
 }
 
-export async function getEvent(timeRange: SpanFilter) {
-	return get<IntervalData[]>(ApiPath.getEvent, timeRange);
+export async function getEventGroup(timeRange: SpanFilter) {
+	return get<IntervalData[]>(ApiPath.getEventGroup, timeRange);
 }

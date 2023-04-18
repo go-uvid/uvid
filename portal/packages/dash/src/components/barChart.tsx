@@ -12,7 +12,13 @@ export function GroupBarChart(props: {data?: IntervalData[]}) {
 			className="flex items-center justify-center"
 		>
 			{data ? (
-				<ComposedChart layout="vertical" data={data}>
+				<ComposedChart
+					layout="vertical"
+					data={data}
+					margin={{
+						right: 20,
+					}}
+				>
 					<XAxis type="number" hide />
 					<YAxis dataKey="x" type="category" />
 					<Bar
@@ -36,6 +42,7 @@ function Label(props: LabelProps) {
 			x={x + width}
 			y={y + height / 2}
 			dx={5}
+			dy={4}
 			fill={Theme.text.primary}
 			fontSize={12}
 		>

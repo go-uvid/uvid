@@ -28,16 +28,16 @@ func bindDashApi(server Server) {
 
 	rg.POST("/user/login", api.loginUser)
 	rg.POST("/user/password", api.changeUserPassword)
-	rg.GET("/pv", api.pageview)
+	rg.GET("/pv/interval", api.pageviewInterval)
 	rg.GET("/pv/count", api.pageviewCount)
-	rg.GET("/uv", api.uniqueVisitor)
+	rg.GET("/uv/interval", api.uniqueVisitorInterval)
 	rg.GET("/uv/count", api.uniqueVisitorCount)
-	rg.GET("/error", api.error)
+	rg.GET("/error/interval", api.errorInterval)
 	rg.GET("/error/count", api.errorCount)
-	rg.GET("/http/error", api.httpError)
+	rg.GET("/http/error/interval", api.httpErrorInterval)
 	rg.GET("/http/error/count", api.httpErrorCount)
 	rg.GET("/performance", api.avgPerformance)
-	rg.GET("/event", api.event)
+	rg.GET("/event/group", api.eventGroup)
 }
 
 type dashApi struct {
@@ -102,7 +102,7 @@ func (api *dashApi) changeUserPassword(c echo.Context) error {
 	return c.JSON(http.StatusOK, nil)
 }
 
-func (api *dashApi) pageview(c echo.Context) error {
+func (api *dashApi) pageviewInterval(c echo.Context) error {
 	body := &dtos.TimeIntervalSpanDTO{}
 	if err := dtos.BindAndValidateDTO(c, body); err != nil {
 		return err
@@ -128,7 +128,7 @@ func (api *dashApi) pageviewCount(c echo.Context) error {
 	return c.JSON(http.StatusOK, count)
 }
 
-func (api *dashApi) uniqueVisitor(c echo.Context) error {
+func (api *dashApi) uniqueVisitorInterval(c echo.Context) error {
 	body := &dtos.TimeIntervalSpanDTO{}
 	if err := dtos.BindAndValidateDTO(c, body); err != nil {
 		return err
@@ -167,7 +167,7 @@ func (api *dashApi) avgPerformance(c echo.Context) error {
 	return c.JSON(http.StatusOK, interval)
 }
 
-func (api *dashApi) event(c echo.Context) error {
+func (api *dashApi) eventGroup(c echo.Context) error {
 	body := &dtos.SpanFilterDTO{}
 	if err := dtos.BindAndValidateDTO(c, body); err != nil {
 		return err
@@ -180,7 +180,7 @@ func (api *dashApi) event(c echo.Context) error {
 	return c.JSON(http.StatusOK, interval)
 }
 
-func (api *dashApi) error(c echo.Context) error {
+func (api *dashApi) errorInterval(c echo.Context) error {
 	body := &dtos.TimeIntervalSpanDTO{}
 	if err := dtos.BindAndValidateDTO(c, body); err != nil {
 		return err
@@ -206,7 +206,7 @@ func (api *dashApi) errorCount(c echo.Context) error {
 	return c.JSON(http.StatusOK, interval)
 }
 
-func (api *dashApi) httpError(c echo.Context) error {
+func (api *dashApi) httpErrorInterval(c echo.Context) error {
 	body := &dtos.TimeIntervalSpanDTO{}
 	if err := dtos.BindAndValidateDTO(c, body); err != nil {
 		return err

@@ -16,14 +16,14 @@ import {
 	type IntervalData,
 	type TimeRangeDTO,
 	getAvgPerformance,
-	getError,
+	getErrorInterval,
 	getErrorCount,
-	getEvent,
-	getHttpError,
+	getEventGroup,
+	getHttpErrorInterval,
 	getHttpErrorCount,
-	getPageview,
+	getPageviewInterval,
 	getPageviewCount,
-	getUniqueVisitor,
+	getUniqueVisitorInterval,
 	getUniqueVisitorCount,
 	PerformanceName,
 } from './api';
@@ -49,10 +49,10 @@ const intervalFetcher: Record<
 	IntervalType,
 	(timeRange: TimeRangeDTO) => Promise<IntervalData[]>
 > = {
-	uv: getUniqueVisitor,
-	pv: getPageview,
-	jsError: getError,
-	httpError: getHttpError,
+	uv: getUniqueVisitorInterval,
+	pv: getPageviewInterval,
+	jsError: getErrorInterval,
+	httpError: getHttpErrorInterval,
 };
 
 export function useIntervalData() {
@@ -116,9 +116,9 @@ export function useAvgPerformance() {
 	);
 }
 
-export function useEvent() {
+export function useEventGroup() {
 	const {startTime, endTime} = useSpanFilterPayload();
-	return useRequest([ApiPath.getEvent, startTime, endTime], async () =>
-		getEvent({start: startTime, end: endTime}),
+	return useRequest([ApiPath.getEventGroup, startTime, endTime], async () =>
+		getEventGroup({start: startTime, end: endTime}),
 	);
 }
