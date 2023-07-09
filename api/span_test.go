@@ -64,29 +64,35 @@ func TestCreateSpan(t *testing.T) {
 		req.AddCookie(&cookie)
 	}
 
-	scenarios := []tests.ApiScenario{
-		sessionApiScenarios,
-		{
-			Name:           "create error",
+	var createSpanApiScenario = func(scenario tests.ApiScenario) tests.ApiScenario {
+		return tests.ApiScenario{
 			Method:         http.MethodPost,
-			Url:            API_ERROR,
-			Body:           strings.NewReader(tools.StructToJSONString(dtos.ErrorDTO{Name: "ErrorName", Message: "ErrorMessage", Stack: "ErrorStack"})),
 			ExpectedStatus: http.StatusNoContent,
 			BeforeRequest:  BeforeRequest,
+			RequestHeaders: requestHeader,
+			Body:           scenario.Body,
+			Url:            scenario.Url,
+			AfterRequest:   scenario.AfterRequest,
+		}
+	}
+
+	scenarios := []tests.ApiScenario{
+		sessionApiScenarios,
+		createSpanApiScenario(tests.ApiScenario{
+			Name: "create error",
+			Url:  API_ERROR,
+			Body: strings.NewReader(tools.StructToJSONString(dtos.ErrorDTO{Name: "ErrorName", Message: "ErrorMessage", Stack: "ErrorStack"})),
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				errors := []models.JSError{}
 				server.Dao.DB.Find(&errors)
 				assert.Len(t, errors, 1)
 				assert.Equal(t, errors[0].SessionUUID, sessionUUID)
 			},
-		},
-		{
-			Name:           "create error 2",
-			Method:         http.MethodPost,
-			Url:            API_ERROR,
-			Body:           strings.NewReader(tools.StructToJSONString(dtos.ErrorDTO{Name: "ErrorName2", Message: "ErrorMessage2", Stack: "ErrorStack2"})),
-			ExpectedStatus: http.StatusNoContent,
-			BeforeRequest:  BeforeRequest,
+		}),
+		createSpanApiScenario(tests.ApiScenario{
+			Name: "create error 2",
+			Url:  API_ERROR,
+			Body: strings.NewReader(tools.StructToJSONString(dtos.ErrorDTO{Name: "ErrorName2", Message: "ErrorMessage2", Stack: "ErrorStack2"})),
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				errors := []models.JSError{}
 				server.Dao.DB.Find(&errors)
@@ -94,11 +100,10 @@ func TestCreateSpan(t *testing.T) {
 				assert.Equal(t, errors[0].SessionUUID, sessionUUID)
 				assert.Equal(t, errors[1].SessionUUID, sessionUUID)
 			},
-		},
-		{
-			Name:   "create http",
-			Method: http.MethodPost,
-			Url:    API_HTTP,
+		}),
+		createSpanApiScenario(tests.ApiScenario{
+			Name: "create http",
+			Url:  API_HTTP,
 			Body: strings.NewReader(tools.StructToJSONString(dtos.HTTPDTO{
 				Resource: randomReferrer(),
 				Method:   randomHttpMethod(),
@@ -107,66 +112,55 @@ func TestCreateSpan(t *testing.T) {
 				Body:     "",
 				Response: "",
 			})),
-			ExpectedStatus: http.StatusNoContent,
-			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				https := []models.HTTP{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
 				assert.Equal(t, https[0].SessionUUID, sessionUUID)
 			},
-		},
-		{
-			Name:   "create event",
-			Method: http.MethodPost,
-			Url:    API_EVENT,
+		}),
+		createSpanApiScenario(tests.ApiScenario{
+			Name: "create event",
+			Url:  API_EVENT,
 			Body: strings.NewReader(tools.StructToJSONString(dtos.EventDTO{
 				Action: randomEventAction(),
 				Value:  "",
 			})),
-			ExpectedStatus: http.StatusNoContent,
-			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				https := []models.Event{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
 				assert.Equal(t, https[0].SessionUUID, sessionUUID)
 			},
-		},
-		{
-			Name:   "create performance",
-			Method: http.MethodPost,
-			Url:    API_PERF,
+		}),
+		createSpanApiScenario(tests.ApiScenario{
+			Name: "create performance",
+			Url:  API_PERF,
 			Body: strings.NewReader(tools.StructToJSONString(dtos.PerformanceDTO{
 				Name:  randomPerfName(),
 				Value: randomPerfValue(),
 				URL:   randomReferrer(),
 			})),
-			ExpectedStatus: http.StatusNoContent,
-			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				https := []models.Performance{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
 				assert.Equal(t, https[0].SessionUUID, sessionUUID)
 			},
-		},
-		{
-			Name:   "create pageview",
-			Method: http.MethodPost,
-			Url:    API_PV,
+		}),
+		createSpanApiScenario(tests.ApiScenario{
+			Name: "create pageview",
+			Url:  API_PV,
 			Body: strings.NewReader(tools.StructToJSONString(dtos.PerformanceDTO{
 				URL: randomReferrer(),
 			})),
-			ExpectedStatus: http.StatusNoContent,
-			BeforeRequest:  BeforeRequest,
 			AfterRequest: func(res *http.Response, server *api.Server) {
 				https := []models.PageView{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
 				assert.Equal(t, https[0].SessionUUID, sessionUUID)
 			},
-		},
+		}),
 	}
 
 	testCase := tests.NewTestCase(*t, scenarios, nil, nil)

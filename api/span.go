@@ -6,17 +6,18 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"zgo.at/isbot"
 )
 
 func bindSpanApi(server Server) {
 	api := &spanApi{server}
-	rg := server.App.Group("/span")
+	rg := server.App.Group("/span", checkBotMiddleware)
 	rg.POST("/session", api.createSession)
-	rg.POST("/error", api.createError, NewEnsureSessionMiddleware(api))
-	rg.POST("/http", api.createHTTP, NewEnsureSessionMiddleware(api))
-	rg.POST("/event", api.createEvent, NewEnsureSessionMiddleware(api))
-	rg.POST("/performance", api.createPerformance, NewEnsureSessionMiddleware(api))
-	rg.POST("/pageview", api.createPageView, NewEnsureSessionMiddleware(api))
+	rg.POST("/error", api.createError, ensureSessionMiddleware)
+	rg.POST("/http", api.createHTTP, ensureSessionMiddleware)
+	rg.POST("/event", api.createEvent, ensureSessionMiddleware)
+	rg.POST("/performance", api.createPerformance, ensureSessionMiddleware)
+	rg.POST("/pageview", api.createPageView, ensureSessionMiddleware)
 }
 
 type spanApi struct {
@@ -108,26 +109,34 @@ func GetSessionUUID(c echo.Context) uuid.UUID {
 	return c.Get(SessionKey).(uuid.UUID)
 }
 
-// NewEnsureSessionMiddleware ensures that the session cookie exist in the request
-// SDK should carry the session header in all requests to create Span
-func NewEnsureSessionMiddleware(api *spanApi) echo.MiddlewareFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			sessionCookie, err := c.Cookie(SessionKey)
-			if err != nil {
-				c.Logger().Error(err)
-				return echo.NewHTTPError(http.StatusBadRequest, "No session")
-			}
-
-			sessionUUID, err := uuid.Parse(sessionCookie.Value)
-			if err != nil {
-				c.Logger().Error(err)
-				return echo.NewHTTPError(http.StatusBadRequest, "Invalid session")
-			}
-
-			c.Set(SessionKey, sessionUUID)
-			return next(c)
+func checkBotMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		result := isbot.Bot(c.Request())
+		if isbot.Is(result) {
+			return echo.ErrForbidden
 		}
+		return next(c)
+	}
+}
+
+// ensureSessionMiddleware ensures that the session cookie exist in the request
+// SDK should carry the session header in all requests to create Span
+func ensureSessionMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sessionCookie, err := c.Cookie(SessionKey)
+		if err != nil {
+			c.Logger().Error(err)
+			return echo.ErrBadRequest
+		}
+
+		sessionUUID, err := uuid.Parse(sessionCookie.Value)
+		if err != nil {
+			c.Logger().Error(err)
+			return echo.ErrBadRequest
+		}
+
+		c.Set(SessionKey, sessionUUID)
+		return next(c)
 	}
 }
 
