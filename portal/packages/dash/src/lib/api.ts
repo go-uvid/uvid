@@ -1,4 +1,4 @@
-import {get, post} from './request';
+import {AUTH_TOKEN_KEY, baseRequest, get, goLogin, post} from './request';
 
 type SpanFilter = {
 	start: string;
@@ -38,6 +38,23 @@ export type ChangePasswordPayload = {
 	currentPassword: string;
 	newPassword: string;
 };
+
+export async function login(name: string, password: string) {
+	return baseRequest<{token: string}>(
+		'post',
+		'/dash/user/login',
+		JSON.stringify({name, password}),
+	).then((response) => {
+		const {token} = response.data;
+		localStorage.setItem(AUTH_TOKEN_KEY, token);
+	});
+}
+
+export function logout() {
+	localStorage.removeItem(AUTH_TOKEN_KEY);
+	void goLogin();
+}
+
 export async function changeUserPassword(data: ChangePasswordPayload) {
 	return post<void>(ApiPath.changeUserPassword, data);
 }

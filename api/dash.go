@@ -68,11 +68,11 @@ func (api *dashApi) loginUser(c echo.Context) error {
 
 	user, err := api.Dao.GetUserByName(body.Name)
 	if err != nil {
-		return echo.ErrUnauthorized
+		return echo.ErrBadRequest
 	}
 	// Throws unauthorized error
 	if err := tools.ComparePassword(user.Password, body.Password); err != nil {
-		return echo.ErrUnauthorized
+		return echo.ErrBadRequest
 	}
 
 	// Set custom claims

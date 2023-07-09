@@ -1,7 +1,7 @@
 import {Form, Input, Button, message, Layout} from 'antd';
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import {useNavigate} from 'react-router-dom';
-import {login} from '../../lib/request';
+import {login} from '../../lib/api';
 
 const {Content} = Layout;
 

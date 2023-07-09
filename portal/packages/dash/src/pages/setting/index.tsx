@@ -1,6 +1,12 @@
 import {Form, Input, Button, message, Layout, Tabs, type TabsProps} from 'antd';
 import {LockOutlined} from '@ant-design/icons';
-import {changeUserPassword, type ChangePasswordPayload} from '../../lib/api';
+import {
+	changeUserPassword,
+	type ChangePasswordPayload,
+	logout,
+} from '../../lib/api';
+
+const operations = <Button onClick={logout}>Log out</Button>;
 
 export function Setting() {
 	const [form] = Form.useForm();
@@ -85,7 +91,11 @@ export function Setting() {
 	];
 	return (
 		<div className="w-main">
-			<Tabs tabPosition="left" items={tabItems} />
+			<Tabs
+				tabPosition="left"
+				items={tabItems}
+				tabBarExtraContent={operations}
+			/>
 		</div>
 	);
 }

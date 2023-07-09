@@ -1,9 +1,10 @@
+import {message} from 'antd';
 import {buildUrl} from './url';
 
-const authTokenKey = 'uvid-auth-token';
+export const AUTH_TOKEN_KEY = 'uvid-auth-token';
 
 function getAuthorization() {
-	const token = localStorage.getItem(authTokenKey);
+	const token = localStorage.getItem(AUTH_TOKEN_KEY);
 	return token ? `Bearer ${token}` : '';
 }
 
@@ -15,7 +16,12 @@ export class RequestError extends Error {
 
 const host = import.meta.env.DEV ? 'http://localhost:3000' : '';
 
-export async function apiRequest<T = any>(
+export async function goLogin() {
+	await message.warning('Please login');
+	location.pathname = '/login';
+}
+
+export async function baseRequest<T = any>(
 	method: string,
 	url: string,
 	body?: string,
@@ -27,7 +33,6 @@ export async function apiRequest<T = any>(
 		headers: {
 			Accept: 'application/json',
 			'Content-Type': 'application/json',
-			Authorization: getAuthorization(),
 			...headers,
 		},
 		body,
@@ -40,6 +45,29 @@ export async function apiRequest<T = any>(
 
 	const text = await response.text();
 	throw new RequestError(text, response.status);
+}
+
+export async function apiRequest<T = any>(
+	method: string,
+	url: string,
+	body?: string,
+	headers?: Record<string, unknown>,
+): Promise<{ok: boolean; status: number; data: T}> {
+	const authHeader = getAuthorization();
+	if (!authHeader) {
+		await goLogin();
+	}
+
+	const response = await baseRequest<T>(method, url, body, {
+		...headers,
+		Authorization: authHeader,
+	});
+
+	if (response.status === 401) {
+		await goLogin();
+	}
+
+	return response;
 }
 
 export async function get<T>(
@@ -96,13 +124,4 @@ export async function put<T>(
 		headers,
 	);
 	return response.data;
-}
-
-export async function login(name: string, password: string) {
-	return post<{token: string}>('/dash/user/login', {name, password}).then(
-		(data) => {
-			const {token} = data;
-			localStorage.setItem(authTokenKey, token);
-		},
-	);
 }
