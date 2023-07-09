@@ -1,3 +1,4 @@
+import {groupBy} from 'lodash-es';
 import {AUTH_TOKEN_KEY, baseRequest, get, goLogin, post} from './request';
 
 type SpanFilter = {
@@ -22,8 +23,9 @@ export type IntervalData = {
 
 export enum ApiPath {
 	changeUserPassword = '/dash/user/password',
-	getPageviewInterval = '/dash/pvs/interval',
-	getPageviewCount = '/dash/pvs/count',
+	getPageViews = '/dash/pvs',
+	getPageViewInterval = '/dash/pvs/interval',
+	getPageViewCount = '/dash/pvs/count',
 	getUniqueVisitorInterval = '/dash/uvs/interval',
 	getUniqueVisitorCount = '/dash/uvs/count',
 	getErrorInterval = '/dash/errors/interval',
@@ -59,12 +61,24 @@ export async function changeUserPassword(data: ChangePasswordPayload) {
 	return post<void>(ApiPath.changeUserPassword, data);
 }
 
-export async function getPageviewInterval(timeRange: TimeRangeDTO) {
-	return get<IntervalData[]>(ApiPath.getPageviewInterval, timeRange);
+type PageViewItem = {
+	url: string;
+};
+export async function getPageViews(timeRange: SpanFilter) {
+	const pvs = await get<PageViewItem[]>(ApiPath.getPageViews, timeRange);
+	const groups = groupBy(pvs, ({url}) => new URL(url).pathname);
+	return Object.keys(groups).map((path) => ({
+		x: path,
+		y: groups[path].length,
+	}));
 }
 
-export async function getPageviewCount(timeRange: SpanFilter) {
-	return get<number>(ApiPath.getPageviewCount, timeRange);
+export async function getPageViewInterval(timeRange: TimeRangeDTO) {
+	return get<IntervalData[]>(ApiPath.getPageViewInterval, timeRange);
+}
+
+export async function getPageViewCount(timeRange: SpanFilter) {
+	return get<number>(ApiPath.getPageViewCount, timeRange);
 }
 
 export async function getUniqueVisitorInterval(timeRange: TimeRangeDTO) {

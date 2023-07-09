@@ -1,4 +1,4 @@
-import {Card, Col, Divider, Grid, Layout, Row, Select, Statistic} from 'antd';
+import {Card, Col, Divider, Layout, Row, Select, Statistic} from 'antd';
 import {useAtom} from 'jotai';
 import {type PropsWithChildren} from 'react';
 import {
@@ -7,7 +7,8 @@ import {
 	useEventGroup,
 	useHttpErrorCount,
 	useIntervalData,
-	usePageviewCount,
+	usePageViewCount,
+	usePageViews,
 	useUniqueVisitorCount,
 } from '../../lib/useApi';
 import {
@@ -37,8 +38,9 @@ export function Home() {
 	const {data: intervalData} = useIntervalData();
 	const {timeRange, setTimeRange} = useTimeRange();
 	const [intervalType, setIntervalType] = useAtom(intervalTypeAtom);
-	const {data: uv} = useUniqueVisitorCount();
-	const {data: pv} = usePageviewCount();
+	const {data: uvCount} = useUniqueVisitorCount();
+	const {data: pv} = usePageViews();
+	const {data: pvCount} = usePageViewCount();
 	const {data: errorCount} = useErrorCount();
 	const {data: httpErrorCount} = useHttpErrorCount();
 	const {data: performance} = useAvgPerformance();
@@ -80,7 +82,7 @@ export function Home() {
 									Unique visitors
 								</StatisticTitle>
 							}
-							value={uv}
+							value={uvCount}
 						/>
 					</Card.Grid>
 					<Card.Grid
@@ -96,7 +98,7 @@ export function Home() {
 									Total pageviews
 								</StatisticTitle>
 							}
-							value={pv}
+							value={pvCount}
 						/>
 					</Card.Grid>
 					<Card.Grid
@@ -143,17 +145,27 @@ export function Home() {
 					<IntervalLineChart data={intervalData} />
 					<Divider />
 					<Row gutter={30} className="w-main">
-						<Col span={8}>
-							<h4 className="flex justify-between px-4">
-								<span className="text-base text-primary">Events</span>
-								<span className="text-base text-primary">Actions count</span>
-							</h4>
+						<Col span={12}>
+							<GroupChartTitle left="Events" right="Action count" />
 							<GroupBarChart data={events} />
+						</Col>
+						<Col span={12}>
+							<GroupChartTitle left="Pages" right="View count" />
+							<GroupBarChart data={pv} />
 						</Col>
 					</Row>
 				</Card>
 			</Content>
 		</Layout>
+	);
+}
+
+function GroupChartTitle({left, right}: {left: string; right: string}) {
+	return (
+		<h4 className="flex justify-between px-4">
+			<span className="text-base text-primary">{left}</span>
+			<span className="text-base text-primary">{right}</span>
+		</h4>
 	);
 }
 

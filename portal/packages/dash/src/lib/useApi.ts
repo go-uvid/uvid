@@ -17,11 +17,12 @@ import {
 	getEventGroup,
 	getHttpErrorInterval,
 	getHttpErrorCount,
-	getPageviewInterval,
-	getPageviewCount,
+	getPageViewInterval,
+	getPageViewCount,
 	getUniqueVisitorInterval,
 	getUniqueVisitorCount,
 	PerformanceName,
+	getPageViews,
 } from './api';
 
 export function useRequest<Data = any>(key: Key, fetcher: Fetcher<Data>) {
@@ -38,7 +39,7 @@ const intervalFetcher: Record<
 	(timeRange: TimeRangeDTO) => Promise<IntervalData[]>
 > = {
 	uv: getUniqueVisitorInterval,
-	pv: getPageviewInterval,
+	pv: getPageViewInterval,
 	jsError: getErrorInterval,
 	httpError: getHttpErrorInterval,
 };
@@ -55,10 +56,17 @@ export function useIntervalData() {
 	);
 }
 
-export function usePageviewCount() {
+export function usePageViews() {
 	const {startTime, endTime} = useSpanFilterPayload();
-	return useRequest([ApiPath.getPageviewCount, startTime, endTime], async () =>
-		getPageviewCount({start: startTime, end: endTime}),
+	return useRequest([ApiPath.getPageViews, startTime, endTime], async () =>
+		getPageViews({start: startTime, end: endTime}),
+	);
+}
+
+export function usePageViewCount() {
+	const {startTime, endTime} = useSpanFilterPayload();
+	return useRequest([ApiPath.getPageViewCount, startTime, endTime], async () =>
+		getPageViewCount({start: startTime, end: endTime}),
 	);
 }
 

@@ -58,16 +58,19 @@ export async function apiRequest<T = any>(
 		await goLogin();
 	}
 
-	const response = await baseRequest<T>(method, url, body, {
-		...headers,
-		Authorization: authHeader,
-	});
+	try {
+		const response = await baseRequest<T>(method, url, body, {
+			...headers,
+			Authorization: authHeader,
+		});
+		return response;
+	} catch (error: unknown) {
+		if (error instanceof RequestError && error.status === 401) {
+			await goLogin();
+		}
 
-	if (response.status === 401) {
-		await goLogin();
+		throw error;
 	}
-
-	return response;
 }
 
 export async function get<T>(

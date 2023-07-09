@@ -33,7 +33,7 @@ func Seed(dsn string) {
 			AppVersion: "1.0.0",
 			URL:        "https://example.com",
 			Screen:     "1920x1080",
-			Referrer:   getRandomURL(),
+			Referrer:   getRandomDomain(),
 			Meta:       "{}",
 			Model:      gorm.Model{CreatedAt: getRandomTime(7)},
 			UUID:       uuid.New(),
@@ -44,7 +44,7 @@ func Seed(dsn string) {
 
 		for j := 0; j < size; j++ {
 			perfMetric := models.PageView{
-				URL:         getRandomURL(),
+				URL:         getRandomPath(),
 				SessionUUID: session.UUID,
 				Session:     session,
 				Model:       gorm.Model{CreatedAt: getRandomTime(7)},
@@ -56,7 +56,7 @@ func Seed(dsn string) {
 			perfMetric := models.Performance{
 				Name:        getRandomPerfName(),
 				Value:       getRandomPerfValue(),
-				URL:         getRandomURL(),
+				URL:         getRandomPath(),
 				SessionUUID: session.UUID,
 				Session:     session,
 				Model:       gorm.Model{CreatedAt: getRandomTime(7)},
@@ -80,7 +80,7 @@ func Seed(dsn string) {
 		// Generate 200 HTTPMetric records for this session
 		for j := 0; j < size; j++ {
 			metric := &models.HTTP{
-				Resource:    getRandomURL(),
+				Resource:    getRandomDomain(),
 				Method:      randomHttpMethod(),
 				Headers:     "Content-Type: text/html",
 				Status:      rand.Intn(400) + 100,
@@ -117,10 +117,16 @@ func getRandomPerfValue() float64 {
 	return rand.Float64() * 10
 }
 
-// getRandomURL generates a random URL for a Performance
-func getRandomURL() string {
+// getRandomDomain generates a random URL for a Performance
+func getRandomDomain() string {
 	urls := []string{"https://example.com", "https://google.com", "https://github.com", "https://stackoverflow.com", "https://wikipedia.org"}
 	return urls[rand.Intn(len(urls))]
+}
+
+// getRandomPath gererates a random url path
+func getRandomPath() string {
+	paths := []string{"/", "/about", "/contact", "/login", "/register", "/dashboard", "/profile", "/settings", "/admin", "/admin/dashboard", "/admin/users"}
+	return "https://example.com" + paths[rand.Intn(len(paths))]
 }
 
 func getRandomTime(daysOffset int) time.Time {
