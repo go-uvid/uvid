@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["gorm", "luvsic", "uvid"],
+  "cSpell.words": ["gorm", "uvid"],
   "[javascript]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "samverschueren.linter-xo"
