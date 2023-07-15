@@ -11,7 +11,7 @@ const DSN = "uvid.db"
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:  "uvid",
-	Long: "Starts the web server (default port 3000), use PORT environment variable to override the port",
+	Long: "Start uvid server (default port 3000), use PORT environment variable to override the port",
 	Run: func(cmd *cobra.Command, args []string) {
 		api.New(DSN).Start()
 	},

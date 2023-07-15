@@ -2,8 +2,8 @@ lint:
 	golangci-lint run -c ./golangci.yml ./...
 
 test:
+	cd portal && pnpm --filter "uvid-js" test
 	go test ./... -v --cover
-	cd portal && pnpm --filter "uvid-js" --filter "dash" test
 
 test-report:
 	go test ./... -v --cover -coverprofile=coverage.out
