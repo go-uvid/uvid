@@ -1,8 +1,9 @@
 package dtos
 
 import (
-	"rick-you/uvid/tools"
 	"time"
+
+	"github.com/rick-you/uvid/tools"
 )
 
 type (

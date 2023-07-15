@@ -2,10 +2,11 @@ package api
 
 import (
 	"os"
-	"rick-you/uvid/daos"
-	"rick-you/uvid/dtos"
-	"rick-you/uvid/tools"
 	"time"
+
+	"github.com/rick-you/uvid/daos"
+	"github.com/rick-you/uvid/dtos"
+	"github.com/rick-you/uvid/tools"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"

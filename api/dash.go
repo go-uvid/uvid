@@ -2,9 +2,10 @@ package api
 
 import (
 	"net/http"
-	"rick-you/uvid/dtos"
-	"rick-you/uvid/tools"
 	"time"
+
+	"github.com/rick-you/uvid/dtos"
+	"github.com/rick-you/uvid/tools"
 
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"

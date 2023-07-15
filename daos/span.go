@@ -1,8 +1,8 @@
 package daos
 
 import (
-	"rick-you/uvid/dtos"
-	"rick-you/uvid/models"
+	"github.com/rick-you/uvid/dtos"
+	"github.com/rick-you/uvid/models"
 
 	"github.com/google/uuid"
 )

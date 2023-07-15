@@ -2,9 +2,10 @@ package daos
 
 import (
 	"fmt"
-	"rick-you/uvid/dtos"
-	"rick-you/uvid/models"
-	"rick-you/uvid/tools"
+
+	"github.com/rick-you/uvid/dtos"
+	"github.com/rick-you/uvid/models"
+	"github.com/rick-you/uvid/tools"
 
 	"gorm.io/gorm"
 )

@@ -3,13 +3,14 @@ package api_test
 import (
 	"math/rand"
 	"net/http"
-	"rick-you/uvid/api"
-	"rick-you/uvid/dtos"
-	"rick-you/uvid/models"
-	"rick-you/uvid/tests"
-	"rick-you/uvid/tools"
 	"strings"
 	"testing"
+
+	"github.com/rick-you/uvid/api"
+	"github.com/rick-you/uvid/dtos"
+	"github.com/rick-you/uvid/models"
+	"github.com/rick-you/uvid/tests"
+	"github.com/rick-you/uvid/tools"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"

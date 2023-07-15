@@ -1,11 +1,12 @@
 package daos_test
 
 import (
-	"rick-you/uvid/daos"
-	"rick-you/uvid/models"
-	"rick-you/uvid/tools"
 	"testing"
 	"time"
+
+	"github.com/rick-you/uvid/daos"
+	"github.com/rick-you/uvid/models"
+	"github.com/rick-you/uvid/tools"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"

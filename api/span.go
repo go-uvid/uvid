@@ -2,7 +2,8 @@ package api
 
 import (
 	"net/http"
-	"rick-you/uvid/dtos"
+
+	"github.com/rick-you/uvid/dtos"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"

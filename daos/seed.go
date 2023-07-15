@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
-	"rick-you/uvid/models"
 	"time"
+
+	"github.com/rick-you/uvid/models"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

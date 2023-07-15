@@ -2,9 +2,10 @@ package daos
 
 import (
 	"errors"
-	"rick-you/uvid/models"
-	"rick-you/uvid/tools"
 	"time"
+
+	"github.com/rick-you/uvid/models"
+	"github.com/rick-you/uvid/tools"
 
 	"github.com/google/uuid"
 	"gorm.io/driver/sqlite"

@@ -7,9 +7,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
-	"rick-you/uvid/api"
 	"testing"
 	"time"
+
+	"github.com/rick-you/uvid/api"
 
 	"github.com/labstack/echo/v4"
 )
