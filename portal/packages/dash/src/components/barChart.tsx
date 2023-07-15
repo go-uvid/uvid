@@ -1,4 +1,11 @@
-import {ResponsiveContainer, Bar, YAxis, XAxis, ComposedChart} from 'recharts';
+import {
+	ResponsiveContainer,
+	Bar,
+	YAxis,
+	XAxis,
+	ComposedChart,
+	LabelList,
+} from 'recharts';
 import {Empty} from 'antd';
 import {type IntervalData} from '../lib/api';
 import {Theme} from '../lib/theme';
@@ -20,13 +27,11 @@ export function GroupBarChart(props: {data?: IntervalData[]}) {
 					}}
 				>
 					<XAxis type="number" hide />
-					<YAxis dataKey="x" type="category" />
-					<Bar
-						dataKey="y"
-						barSize={20}
-						fill={Theme.color.primary}
-						label={Label}
-					/>
+					<YAxis dataKey="x" type="category" hide />
+					<Bar dataKey="y" barSize={20} fill={Theme.color.primary}>
+						<LabelList dataKey="x" position="insideLeft" fill="#ffffff" />
+						<LabelList dataKey="y" position="right" />
+					</Bar>
 				</ComposedChart>
 			) : (
 				<Empty />
@@ -34,38 +39,3 @@ export function GroupBarChart(props: {data?: IntervalData[]}) {
 		</ResponsiveContainer>
 	);
 }
-
-function Label(props: LabelProps) {
-	const {x, y, width, height, value} = props;
-	return (
-		<text
-			x={x + width}
-			y={y + height / 2}
-			dx={5}
-			dy={4}
-			fill={Theme.text.primary}
-			fontSize={12}
-		>
-			{value}
-		</text>
-	);
-}
-
-export type LabelProps = {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-	index: number;
-	value: number;
-	viewBox: ViewBox;
-	offset: number;
-	stroke?: string;
-};
-
-export type ViewBox = {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-};

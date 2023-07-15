@@ -1,5 +1,7 @@
 import useSWR, {type Fetcher, type Key} from 'swr';
 import {useAtom} from 'jotai';
+import {groupBy} from 'lodash-es';
+import {UAParser} from 'ua-parser-js';
 import {
 	type IntervalType,
 	intervalTypeAtom,
@@ -23,6 +25,7 @@ import {
 	getUniqueVisitorCount,
 	PerformanceName,
 	getPageViews,
+	getSessions,
 } from './api';
 
 export function useRequest<Data = any>(key: Key, fetcher: Fetcher<Data>) {
@@ -59,7 +62,56 @@ export function useIntervalData() {
 export function usePageViews() {
 	const {startTime, endTime} = useSpanFilterPayload();
 	return useRequest([ApiPath.getPageViews, startTime, endTime], async () =>
-		getPageViews({start: startTime, end: endTime}),
+		getPageViews({start: startTime, end: endTime}).then((pvs) =>
+			groupAndCount(pvs, ({url}) => new URL(url).pathname),
+		),
+	);
+}
+
+export function useSessions() {
+	const {startTime, endTime} = useSpanFilterPayload();
+	return useRequest([ApiPath.getSessions, startTime, endTime], async () =>
+		getSessions({start: startTime, end: endTime}),
+	);
+}
+
+function groupAndCount<T>(array?: T[], iteratee?: (item: T) => string) {
+	if (!array) return undefined;
+	const group = groupBy<T>(array, iteratee);
+	return Object.keys(group).map((x) => ({
+		x,
+		y: group[x].length,
+	}));
+}
+
+export function useReferrers() {
+	const {data: sessions} = useSessions();
+	return groupAndCount(sessions, (session) => session.referrer);
+}
+
+const UNKNOWN_TYPE = 'unknown';
+
+export function useOSs() {
+	const {data: sessions} = useSessions();
+	return groupAndCount(
+		sessions,
+		(session) => new UAParser(session.ua).getOS().name ?? UNKNOWN_TYPE,
+	);
+}
+
+export function useBrowsers() {
+	const {data: sessions} = useSessions();
+	return groupAndCount(
+		sessions,
+		(session) => new UAParser(session.ua).getBrowser().name ?? UNKNOWN_TYPE,
+	);
+}
+
+export function useDevice() {
+	const {data: sessions} = useSessions();
+	return groupAndCount(
+		sessions,
+		(session) => new UAParser(session.ua).getDevice().type ?? UNKNOWN_TYPE,
 	);
 }
 

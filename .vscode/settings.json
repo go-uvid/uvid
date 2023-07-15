@@ -1,7 +1,20 @@
 {
-    "cSpell.words": [
-        "gorm",
-        "luvsic",
-        "uvid"
-    ]
+  "cSpell.words": ["gorm", "luvsic", "uvid"],
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "samverschueren.linter-xo"
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "samverschueren.linter-xo"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "samverschueren.linter-xo"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "samverschueren.linter-xo"
+  },
+  "xo.format.enable": true
 }

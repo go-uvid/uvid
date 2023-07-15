@@ -106,7 +106,7 @@ test('basic', async ({page}) => {
 		message: errorMessage,
 		stack: errorStack!,
 	};
-	const pageviewData = {
+	const pageViewData = {
 		url: `${apiHost}/span/pageview`,
 		body: {
 			url,
@@ -117,7 +117,7 @@ test('basic', async ({page}) => {
 			url: `${apiHost}/span/session`,
 			body: session,
 		},
-		pageviewData,
+		pageViewData,
 		{
 			url: `${apiHost}/span/performance`,
 			body: firstLCP,
@@ -143,7 +143,7 @@ test('basic', async ({page}) => {
 				value: 0,
 			},
 		},
-		pageviewData,
+		pageViewData,
 		{
 			url: `${apiHost}/span/performance`,
 			body: secondLCP,

@@ -1,14 +1,18 @@
 import {Card, Col, Divider, Layout, Row, Select, Statistic} from 'antd';
 import {useAtom} from 'jotai';
-import {type PropsWithChildren} from 'react';
+import {type ReactNode, type PropsWithChildren} from 'react';
 import {
 	useAvgPerformance,
+	useBrowsers,
+	useDevice,
 	useErrorCount,
 	useEventGroup,
 	useHttpErrorCount,
 	useIntervalData,
+	useOSs,
 	usePageViewCount,
 	usePageViews,
+	useReferrers,
 	useUniqueVisitorCount,
 } from '../../lib/useApi';
 import {
@@ -45,6 +49,10 @@ export function Home() {
 	const {data: httpErrorCount} = useHttpErrorCount();
 	const {data: performance} = useAvgPerformance();
 	const {data: events} = useEventGroup();
+	const referrers = useReferrers();
+	const oss = useOSs();
+	const devices = useDevice();
+	const browsers = useBrowsers();
 
 	function handleChange(value: TimeRange) {
 		setTimeRange(value);
@@ -95,7 +103,7 @@ export function Home() {
 						<Statistic
 							title={
 								<StatisticTitle active={intervalType === 'pv'}>
-									Total pageviews
+									Total page views
 								</StatisticTitle>
 							}
 							value={pvCount}
@@ -142,29 +150,76 @@ export function Home() {
 					<Card.Grid style={gridStyle} hoverable={false}>
 						<Statistic title="FID" value={performance?.FID} suffix="s" />
 					</Card.Grid>
-					<IntervalLineChart data={intervalData} />
+					<div className="w-main px-3">
+						<IntervalLineChart data={intervalData} />
+					</div>
 					<Divider />
-					<Row gutter={30} className="w-main">
-						<Col span={12}>
-							<GroupChartTitle left="Events" right="Action count" />
-							<GroupBarChart data={events} />
-						</Col>
-						<Col span={12}>
-							<GroupChartTitle left="Pages" right="View count" />
-							<GroupBarChart data={pv} />
-						</Col>
-					</Row>
+					<ChartGroup
+						left={
+							<>
+								<GroupChartTitle left="Events" />
+								<GroupBarChart data={events} />
+							</>
+						}
+						right={
+							<>
+								<GroupChartTitle left="Pages" />
+								<GroupBarChart data={pv} />
+							</>
+						}
+					/>
+					<Divider />
+					<ChartGroup
+						left={
+							<>
+								<GroupChartTitle left="Referrers" />
+								<GroupBarChart data={referrers} />
+							</>
+						}
+						right={
+							<>
+								<GroupChartTitle left="OS" />
+								<GroupBarChart data={oss} />
+							</>
+						}
+					/>
+					<ChartGroup
+						left={
+							<>
+								<GroupChartTitle left="Browsers" />
+								<GroupBarChart data={browsers} />
+							</>
+						}
+						right={
+							<>
+								<GroupChartTitle left="Devices" />
+								<GroupBarChart data={devices} />
+							</>
+						}
+					/>
+					<Divider />
 				</Card>
 			</Content>
 		</Layout>
 	);
 }
 
-function GroupChartTitle({left, right}: {left: string; right: string}) {
+function ChartGroup({left, right}: {left: ReactNode; right: ReactNode}) {
 	return (
-		<h4 className="flex justify-between px-4">
+		<Row gutter={30} className="w-main px-8">
+			<Col span={11}>{left}</Col>
+			<Col span={2}>
+				<Divider type="vertical" style={{height: '100%'}} />
+			</Col>
+			<Col span={11}>{right}</Col>
+		</Row>
+	);
+}
+
+function GroupChartTitle({left}: {left: string}) {
+	return (
+		<h4 className="flex justify-between">
 			<span className="text-base text-primary">{left}</span>
-			<span className="text-base text-primary">{right}</span>
 		</h4>
 	);
 }

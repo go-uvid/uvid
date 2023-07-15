@@ -1,4 +1,3 @@
-import {groupBy} from 'lodash-es';
 import {AUTH_TOKEN_KEY, baseRequest, get, goLogin, post} from './request';
 
 type SpanFilter = {
@@ -20,6 +19,19 @@ export type IntervalData = {
 	x: string;
 	y: number;
 };
+type BaseSessionDTO = {
+	appVersion: string;
+	url: string;
+	screen: string;
+	referrer: string;
+	language: string;
+	meta?: string;
+};
+
+type SessionDTO = {
+	ua: string;
+	ip: string;
+} & BaseSessionDTO;
 
 export enum ApiPath {
 	changeUserPassword = '/dash/user/password',
@@ -34,6 +46,7 @@ export enum ApiPath {
 	getHttpErrorCount = '/dash/https/errors/count',
 	getAvgPerformance = '/dash/performances',
 	getEventGroup = '/dash/events/group',
+	getSessions = '/dash/sessions',
 }
 
 export type ChangePasswordPayload = {
@@ -66,11 +79,7 @@ type PageViewItem = {
 };
 export async function getPageViews(timeRange: SpanFilter) {
 	const pvs = await get<PageViewItem[]>(ApiPath.getPageViews, timeRange);
-	const groups = groupBy(pvs, ({url}) => new URL(url).pathname);
-	return Object.keys(groups).map((path) => ({
-		x: path,
-		y: groups[path].length,
-	}));
+	return pvs;
 }
 
 export async function getPageViewInterval(timeRange: TimeRangeDTO) {
@@ -111,4 +120,8 @@ export async function getAvgPerformance(timeRange: SpanFilter) {
 
 export async function getEventGroup(timeRange: SpanFilter) {
 	return get<IntervalData[]>(ApiPath.getEventGroup, timeRange);
+}
+
+export async function getSessions(timeRange: SpanFilter) {
+	return get<SessionDTO[]>(ApiPath.getSessions, timeRange);
 }
