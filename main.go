@@ -1,7 +1,7 @@
 package main
 
 import (
-	"luvsic3/uvid/cmd"
+	"rick-you/uvid/cmd"
 )
 
 func main() {

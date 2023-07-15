@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"luvsic3/uvid/api"
+	"rick-you/uvid/api"
 
 	"github.com/spf13/cobra"
 )

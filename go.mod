@@ -1,4 +1,4 @@
-module luvsic3/uvid
+module rick-you/uvid
 
 go 1.20
 

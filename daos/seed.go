@@ -2,9 +2,9 @@ package daos
 
 import (
 	"fmt"
-	"luvsic3/uvid/models"
 	"math/rand"
 	"net/http"
+	"rick-you/uvid/models"
 	"time"
 
 	"github.com/google/uuid"

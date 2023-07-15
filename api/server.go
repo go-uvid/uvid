@@ -1,10 +1,10 @@
 package api
 
 import (
-	"luvsic3/uvid/daos"
-	"luvsic3/uvid/dtos"
-	"luvsic3/uvid/tools"
 	"os"
+	"rick-you/uvid/daos"
+	"rick-you/uvid/dtos"
+	"rick-you/uvid/tools"
 	"time"
 
 	"github.com/go-playground/validator"

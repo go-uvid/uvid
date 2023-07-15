@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"luvsic3/uvid/portal"
+	"rick-you/uvid/portal"
 
 	"github.com/labstack/echo/v4/middleware"
 )

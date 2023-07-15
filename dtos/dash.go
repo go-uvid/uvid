@@ -1,7 +1,7 @@
 package dtos
 
 import (
-	"luvsic3/uvid/tools"
+	"rick-you/uvid/tools"
 	"time"
 )
 

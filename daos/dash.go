@@ -2,9 +2,9 @@ package daos
 
 import (
 	"fmt"
-	"luvsic3/uvid/dtos"
-	"luvsic3/uvid/models"
-	"luvsic3/uvid/tools"
+	"rick-you/uvid/dtos"
+	"rick-you/uvid/models"
+	"rick-you/uvid/tools"
 
 	"gorm.io/gorm"
 )

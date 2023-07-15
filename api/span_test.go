@@ -1,13 +1,13 @@
 package api_test
 
 import (
-	"luvsic3/uvid/api"
-	"luvsic3/uvid/dtos"
-	"luvsic3/uvid/models"
-	"luvsic3/uvid/tests"
-	"luvsic3/uvid/tools"
 	"math/rand"
 	"net/http"
+	"rick-you/uvid/api"
+	"rick-you/uvid/dtos"
+	"rick-you/uvid/models"
+	"rick-you/uvid/tests"
+	"rick-you/uvid/tools"
 	"strings"
 	"testing"
 

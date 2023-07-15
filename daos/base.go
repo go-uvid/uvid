@@ -2,8 +2,8 @@ package daos
 
 import (
 	"errors"
-	"luvsic3/uvid/models"
-	"luvsic3/uvid/tools"
+	"rick-you/uvid/models"
+	"rick-you/uvid/tools"
 	"time"
 
 	"github.com/google/uuid"

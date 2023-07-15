@@ -1,9 +1,9 @@
 package daos_test
 
 import (
-	"luvsic3/uvid/daos"
-	"luvsic3/uvid/models"
-	"luvsic3/uvid/tools"
+	"rick-you/uvid/daos"
+	"rick-you/uvid/models"
+	"rick-you/uvid/tools"
 	"testing"
 	"time"
 

@@ -1,9 +1,9 @@
 package api
 
 import (
-	"luvsic3/uvid/dtos"
-	"luvsic3/uvid/tools"
 	"net/http"
+	"rick-you/uvid/dtos"
+	"rick-you/uvid/tools"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

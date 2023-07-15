@@ -1,8 +1,8 @@
 package api
 
 import (
-	"luvsic3/uvid/dtos"
 	"net/http"
+	"rick-you/uvid/dtos"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"

@@ -1,8 +1,8 @@
 package daos
 
 import (
-	"luvsic3/uvid/dtos"
-	"luvsic3/uvid/models"
+	"rick-you/uvid/dtos"
+	"rick-you/uvid/models"
 
 	"github.com/google/uuid"
 )
