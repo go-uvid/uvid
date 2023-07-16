@@ -16,10 +16,24 @@ export class RequestError extends Error {
 
 const host = import.meta.env.DEV ? 'http://localhost:3000' : '';
 
-export async function goLogin() {
+function singletonPromiseFn<T>(fn: () => Promise<T>) {
+	let promise: Promise<T> | undefined;
+	return async () => {
+		if (!promise) {
+			promise = fn().then((result) => {
+				promise = undefined;
+				return result;
+			});
+		}
+
+		return promise;
+	};
+}
+
+export const goLogin = singletonPromiseFn(async () => {
 	await message.warning('Please login');
 	location.pathname = '/login';
-}
+});
 
 export async function baseRequest<T = any>(
 	method: string,

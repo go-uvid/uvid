@@ -197,7 +197,6 @@ export function Home() {
 							</>
 						}
 					/>
-					<Divider />
 				</Card>
 			</Content>
 		</Layout>

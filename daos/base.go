@@ -37,21 +37,24 @@ func (dao *Dao) SpanFilter(start time.Time, end time.Time) *gorm.DB {
 	return dao.DB.Where("created_at >= ? AND created_at < ?", start.Local(), end.Local()).Session(&gorm.Session{})
 }
 
-const rootUserName = "root"
+const (
+	ADMIN_NAME = "root"
+	ADMIN_PASS = "uvid"
+)
 
 func (dao *Dao) InitializeDB() error {
 	rootUser := models.User{
-		Name: rootUserName,
+		Name: ADMIN_NAME,
 	}
 	err := dao.DB.First(&rootUser).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		pass, err := tools.HashPassword(rootUserName)
+		pass, err := tools.HashPassword(ADMIN_PASS)
 		if err != nil {
 			return err
 		}
 		dao.DB.Transaction(func(tx *gorm.DB) error {
 			if err = tx.Create(&models.User{
-				Name:     rootUserName,
+				Name:     ADMIN_NAME,
 				Password: string(pass),
 			}).Error; err != nil {
 				return err
