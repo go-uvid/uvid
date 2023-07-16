@@ -29,7 +29,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
+/portal/packages/uvid-js/dist
+/dist
 dist-ssr
 *.local
 
@@ -46,5 +47,3 @@ dist-ssr
 test-results/
 playwright-report/
 playwright/.cache/
-
-dist/
