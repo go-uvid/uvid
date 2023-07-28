@@ -3,23 +3,21 @@
 layout: home
 
 hero:
-  name: "Uvid Docs"
-  text: "Observable Platform for Frontend Websites"
-  tagline: My great project tagline
+  name: "UVID"
+  tagline: Observable Platform for Frontend Websites
   actions:
     - theme: brand
-      text: Markdown Examples
+      text: Online Demo
       link: /markdown-examples
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Documentation
+      link: /documentation
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Real User Interaction Tracking
+    details: UVID empowers you to gain a better understanding of how users interact with your website in real-time.
+  - title: Site Error Monitoring
+    details: UVID helps you troubleshoot website errors by identifying the root cause of the problem, reducing your frustration.
+  - title: Frontend Performance Monitoring
+    details: Website success requires optimal site performance. We monitor key metrics, such as page load time, and provide detailed reports to help you understand your site's performance.
 ---
-
