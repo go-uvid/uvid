@@ -7,6 +7,6 @@ import jotaiReactRefresh from 'jotai/babel/plugin-react-refresh';
 export default defineConfig({
 	plugins: [react({babel: {plugins: [jotaiDebugLabel, jotaiReactRefresh]}})],
 	build: {
-		sourcemap: true,
+		sourcemap: false,
 	},
 });

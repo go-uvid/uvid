@@ -6,21 +6,22 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <!-- <a href="https://github.com/rick-you/uvid">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a> -->
+  <a href="[repo-url]">
+    <img src="media/logo.svg" alt="Logo" width="80" height="80">
+  </a>
 
-<h3 align="center">UVID</h3>
+  <h3 align="center">UVID</h3>
 
   <p align="center">
-    Observable Platform for Frontend Websites:
+    <br />
+    Observable Platform for Frontend Websites
     <br />
     <br />
 <!-- <a href="https://github.com/rick-you/uvid">View Demo</a>
     · -->
-<a href="https://github.com/rick-you/uvid/issues">Report Bug</a>
+    <a href="[issues-url]">Report Bug</a>
 ·
-<a href="https://github.com/rick-you/uvid/issues">Request Feature</a>
+    <a href="[issues-url]">Request Feature</a>
   </p>
 </div>
 
@@ -65,8 +66,8 @@ Makes sure you have golang installed
    ```
 
 3. Open dashboard with `YOUR_SERVER_IP/:3000`, or <http://localhost:3000> if you installed locally
-
-4. That's all. `./uvid.db` is sqlite database stores all your data
+4. Login to dashboard, default user name is `root`, password is `uvid`
+5. That's all. `./uvid.db` is sqlite database stores all your data
 
 ## Usage
 
@@ -127,3 +128,4 @@ See `LICENSE.txt` for more information.
 [stars-url]: https://github.com/rick-you/uvid/stargazers
 [license-shield]: https://img.shields.io/github/license/rick-you/uvid.svg?style=for-the-badge
 [license-url]: https://github.com/rick-you/uvid/blob/master/LICENSE.txt
+[issues-url]: https://github.com/rick-you/uvid/issues
