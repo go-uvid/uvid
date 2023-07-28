@@ -7,6 +7,9 @@
 			"path": "../js/packages/uvid-js"
 		},
 		{
+			"path": "../js/packages/site"
+		},
+		{
 			"path": "../js/packages/dash"
 		}
 	],
