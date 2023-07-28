@@ -4,10 +4,10 @@
 			"path": ".."
 		},
 		{
-			"path": "../portal/packages/uvid-js"
+			"path": "../js/packages/uvid-js"
 		},
 		{
-			"path": "../portal/packages/dash"
+			"path": "../js/packages/dash"
 		}
 	],
 	"settings": {}

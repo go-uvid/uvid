@@ -2,7 +2,7 @@ lint:
 	golangci-lint run -c ./golangci.yml ./...
 
 test:
-	cd portal && pnpm --filter "uvid-js" test
+	cd js && pnpm --filter "uvid-js" test
 	go test ./... -v --cover
 
 test-report:
@@ -10,7 +10,7 @@ test-report:
 	go tool cover -html=coverage.out
 
 build:
-	cd portal && pnpm --filter "uvid-js" --filter "dash" build
+	cd js && pnpm --filter "uvid-js" --filter "dash" build
 	GOFLAGS=-mod=mod go build -o bin/uvid main.go
 
 run: 

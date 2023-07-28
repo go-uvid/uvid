@@ -29,7 +29,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-/portal/packages/uvid-js/dist
+/js/packages/uvid-js/dist
 /dist
 dist-ssr
 *.local

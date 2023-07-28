@@ -1,4 +1,4 @@
-package portal
+package dash_embed
 
 import "embed"
 

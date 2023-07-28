@@ -21,15 +21,15 @@ jobs:
         version: 7
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
-      working-directory: ./portal
+      working-directory: ./js
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
     - name: Install dependencies
-      working-directory: ./portal
+      working-directory: ./js
       run: pnpm install
     - name: Install Playwright Browsers
-      working-directory: ./portal
+      working-directory: ./js
       run: pnpm exec playwright install --with-deps
     - name: Run tests
       run: make build && make test
@@ -37,5 +37,5 @@ jobs:
       if: always()
       with:
         name: playwright-report
-        path: ./portal/playwright-report/
+        path: ./js/playwright-report/
         retention-days: 30
