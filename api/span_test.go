@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"strings"
@@ -29,7 +30,7 @@ var requestHeader = map[string]string{
 	"User-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
 }
 
-func getSessionApi(t *testing.T, sessionUUID *uuid.UUID, cookie *http.Cookie) tests.ApiScenario {
+func getSessionApi(t *testing.T, sessionUUID *uuid.UUID) tests.ApiScenario {
 	var sessionApiScenarios = tests.ApiScenario{
 		Name:           "create session",
 		Method:         http.MethodPost,
@@ -43,9 +44,10 @@ func getSessionApi(t *testing.T, sessionUUID *uuid.UUID, cookie *http.Cookie) te
 				"language": "en"
 			  }`),
 		AfterRequest: func(res *http.Response, server *api.Server) {
-			cookies := res.Cookies()
-			*cookie = *cookies[0]
-			_uuid, err := uuid.Parse(cookie.Value)
+			defer res.Body.Close()
+			body, err := ioutil.ReadAll(res.Body)
+			assert.NoError(t, err)
+			_uuid, err := uuid.Parse(string(body))
 			*sessionUUID = _uuid
 			assert.NoError(t, err)
 		},
@@ -56,13 +58,11 @@ func getSessionApi(t *testing.T, sessionUUID *uuid.UUID, cookie *http.Cookie) te
 
 func TestCreateSpan(t *testing.T) {
 	var sessionUUID uuid.UUID
-	var cookie http.Cookie
-	var sessionApiScenarios = getSessionApi(t, &sessionUUID, &cookie)
+	var sessionApiScenarios = getSessionApi(t, &sessionUUID)
 
 	var BeforeRequest = func(req *http.Request, server *api.Server) {
-		assert.NotNil(t, cookie)
 		assert.NotEqual(t, sessionUUID, uuid.Nil)
-		req.AddCookie(&cookie)
+		req.Header.Set(api.SessionHeaderKey, sessionUUID.String())
 	}
 
 	var createSpanApiScenario = func(scenario tests.ApiScenario) tests.ApiScenario {

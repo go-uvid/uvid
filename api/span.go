@@ -14,11 +14,11 @@ func bindSpanApi(server Server) {
 	api := &spanApi{server}
 	rg := server.App.Group("/span", checkBotMiddleware)
 	rg.POST("/session", api.createSession)
-	rg.POST("/error", api.createError, ensureSessionMiddleware)
-	rg.POST("/http", api.createHTTP, ensureSessionMiddleware)
-	rg.POST("/event", api.createEvent, ensureSessionMiddleware)
-	rg.POST("/performance", api.createPerformance, ensureSessionMiddleware)
-	rg.POST("/pageview", api.createPageView, ensureSessionMiddleware)
+	rg.POST("/error", api.createError)
+	rg.POST("/http", api.createHTTP)
+	rg.POST("/event", api.createEvent)
+	rg.POST("/performance", api.createPerformance)
+	rg.POST("/pageview", api.createPageView)
 }
 
 type spanApi struct {
@@ -39,12 +39,7 @@ func (api *spanApi) createSession(c echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 	sessionUUID := session.UUID
-	cookie := http.Cookie{
-		Name:  SessionKey,
-		Value: sessionUUID.String(),
-	}
-	c.SetCookie(&cookie)
-	return c.NoContent(http.StatusNoContent)
+	return c.String(http.StatusOK, sessionUUID.String())
 }
 
 func (api *spanApi) createError(c echo.Context) error {
@@ -104,10 +99,10 @@ func handleDaoAndResponse(c echo.Context, err error) error {
 	return c.NoContent(http.StatusNoContent)
 }
 
-const SessionKey = "uvid-session"
+const SessionHeaderKey = "X-UVID-Session"
 
 func GetSessionUUID(c echo.Context) uuid.UUID {
-	return c.Get(SessionKey).(uuid.UUID)
+	return uuid.MustParse(c.Request().Header.Get(SessionHeaderKey))
 }
 
 func checkBotMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
@@ -116,27 +111,6 @@ func checkBotMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		if isbot.Is(result) {
 			return echo.ErrForbidden
 		}
-		return next(c)
-	}
-}
-
-// ensureSessionMiddleware ensures that the session cookie exist in the request
-// SDK should carry the session header in all requests to create Span
-func ensureSessionMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		sessionCookie, err := c.Cookie(SessionKey)
-		if err != nil {
-			c.Logger().Error(err)
-			return echo.ErrBadRequest
-		}
-
-		sessionUUID, err := uuid.Parse(sessionCookie.Value)
-		if err != nil {
-			c.Logger().Error(err)
-			return echo.ErrBadRequest
-		}
-
-		c.Set(SessionKey, sessionUUID)
 		return next(c)
 	}
 }

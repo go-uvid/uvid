@@ -9,6 +9,8 @@ import {
 } from './types/span';
 import {assert} from './utils';
 
+const sessionHeaderKey = 'X-UVID-Session';
+
 async function initSession() {
 	const data: BaseSessionDTO = {
 		appVersion: sdkConfig.appVersion,
@@ -18,17 +20,18 @@ async function initSession() {
 		language: navigator.language,
 		meta: JSON.stringify(sdkConfig.sessionMeta),
 	};
-	return (sdkConfig.__internal__request ?? _request)('/span/session', data);
+	const response = await (sdkConfig.__internal__request ?? _request)(
+		'/span/session',
+		data,
+	);
+	const sessionValue = await response.text();
+	sessionStorage.setItem(sessionHeaderKey, sessionValue);
 }
 
-let sessionRequest: Promise<Response> | undefined;
-
 export async function request(path: string, data: RequestData) {
-	if (!sessionRequest) {
-		sessionRequest = initSession();
+	if (!getSession()) {
+		await initSession();
 	}
-
-	await sessionRequest;
 
 	return (sdkConfig.__internal__request ?? _request)(path, data);
 }
@@ -47,12 +50,16 @@ async function _request(path: string, data: RequestData) {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
+			[sessionHeaderKey]: getSession(),
 		},
 		keepalive: true,
 		body: JSON.stringify(data),
-		credentials: 'include',
 	}).then((response) => {
 		if (response.ok) return response;
 		throw new Error(response.statusText);
 	});
+}
+
+function getSession() {
+	return sessionStorage.getItem(sessionHeaderKey) ?? '';
 }

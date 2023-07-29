@@ -21,9 +21,10 @@ type Data = {
 };
 const actualData: Data[] = [];
 
+// Serve html page, since we cannot add cookie when using file protocol
+await serve(publicPath);
+
 test.beforeEach(async ({page}) => {
-	// Serve html page, since we cannot add cookie when using file protocol
-	await serve(publicPath);
 	await page.goto(pageUrl);
 	await page.route(`${apiHost}/**/*`, async (route) => {
 		const postData = route.request().postData();
@@ -39,13 +40,10 @@ test.beforeEach(async ({page}) => {
 		});
 
 		if (route.request().url().includes('/span/session')) {
-			await page.context().addCookies([
-				{
-					name: 'uvid-session',
-					value: randomUUID(),
-					url: pageUrl,
-				},
-			]);
+			const uuid = randomUUID();
+			await page.evaluate((_uuid) => {
+				sessionStorage.setItem('X-UVID-Session', _uuid);
+			}, uuid);
 		}
 
 		await route.fulfill({
