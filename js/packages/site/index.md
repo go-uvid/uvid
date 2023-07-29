@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Online Demo
-      link: /markdown-examples
+      link: http://uvid-demo.applet.ink
     - theme: alt
       text: Documentation
       link: /documentation

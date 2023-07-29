@@ -30,6 +30,7 @@ lerna-debug.log*
 
 node_modules
 /js/packages/uvid-js/dist
+js/packages/site/.vitepress/dist
 js/packages/site/.vitepress/cache
 /dist
 dist-ssr
