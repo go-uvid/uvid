@@ -7,8 +7,7 @@ const sdk = init({
 		userId: '123',
 	},
 	appVersion: '1.0.0',
-	// @ts-expect-error __internal__request is not part of the public API
-	__internal__request: console.log,
+	// __internal__request: console.log,
 });
 
 const errorButton = document.querySelector('#error-button');
