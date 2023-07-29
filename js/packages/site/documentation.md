@@ -17,7 +17,7 @@ Makes sure you have golang installed
 2. Run server
 
    ```sh
-   uvid
+   go/bin/uvid
    ```
 
 3. Open dashboard with `YOUR_SERVER_IP/:3000`, or <http://localhost:3000> if you installed locally

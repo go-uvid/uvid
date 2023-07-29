@@ -16,4 +16,20 @@ export default defineConfig({
     socialLinks: [{ icon: "github", link: "https://github.com/rick-you/uvid" }],
     logo: "./media/logo.svg",
   },
+  head: [
+    [
+      "script",
+      { type: "module" },
+      `
+      import { init } from "https://www.unpkg.com/uvid-js?module";
+      
+      window.uvid = init({
+        host: "http://uvid-demo.applet.ink",
+        sessionMeta: {
+          from: "uvid-site",
+        },
+      });
+      `,
+    ],
+  ],
 });

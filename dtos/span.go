@@ -39,7 +39,7 @@ type (
 		AppVersion string `json:"appVersion"`
 		URL        string `json:"url" validate:"required"`
 		Screen     string `json:"screen" validate:"required"`
-		Referrer   string `json:"referrer" validate:"required"`
+		Referrer   string `json:"referrer" validate:"omitempty"`
 		Language   string `json:"language" validate:"required"`
 		Meta       string `json:"meta"`
 	}
