@@ -14,7 +14,7 @@ export default defineConfig({
     sidebar: [],
 
     socialLinks: [{ icon: "github", link: "https://github.com/rick-you/uvid" }],
-    logo: "./media/logo.svg",
+    logo: "logo.svg",
   },
   head: [
     [

@@ -28,7 +28,7 @@ type (
 	}
 	PerformanceDTO struct {
 		Name  string  `json:"name" validate:"required"`
-		Value float64 `json:"value" validate:"required"`
+		Value float64 `json:"value" validate:"omitempty"`
 		URL   string  `json:"url" validate:"required"`
 	}
 	PageViewDTO struct {

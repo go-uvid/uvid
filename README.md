@@ -7,7 +7,7 @@
 <br />
 <div align="center">
   <a href="[repo-url]">
-    <img src="js/packages/site/media/logo.svg" alt="Logo" width="80" height="80">
+    <img src="js/packages/site/public/logo.svg" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">UVID</h3>
@@ -17,8 +17,8 @@
     Observable Platform for Frontend Websites
     <br />
     <br />
-<!-- <a href="https://github.com/rick-you/uvid">View Demo</a>
-    · -->
+    <a href="https://uvid.deno.dev">View Demo</a>
+    ·
     <a href="[issues-url]">Report Bug</a>
 ·
     <a href="[issues-url]">Request Feature</a>
