@@ -50,7 +50,6 @@ export async function baseRequest<T = any>(
 			...headers,
 		},
 		body,
-		credentials: 'include',
 	});
 	if (response.ok) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

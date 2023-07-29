@@ -51,6 +51,7 @@ async function _request(path: string, data: RequestData) {
 		},
 		keepalive: true,
 		body: JSON.stringify(data),
+		credentials: 'include',
 	}).then((response) => {
 		if (response.ok) return response;
 		throw new Error(response.statusText);
