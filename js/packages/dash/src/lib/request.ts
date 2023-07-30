@@ -68,9 +68,6 @@ export async function apiRequest<T = any>(
 	headers?: Record<string, unknown>,
 ): Promise<{ok: boolean; status: number; data: T}> {
 	const authHeader = getAuthorization();
-	if (!authHeader) {
-		await goLogin();
-	}
 
 	try {
 		const response = await baseRequest<T>(method, url, body, {

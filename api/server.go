@@ -1,12 +1,11 @@
 package api
 
 import (
-	"os"
 	"time"
 
+	"github.com/rick-you/uvid/config"
 	"github.com/rick-you/uvid/daos"
 	"github.com/rick-you/uvid/dtos"
-	"github.com/rick-you/uvid/tools"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
@@ -53,7 +52,5 @@ func New(dsn string) Server {
 }
 
 func (server Server) Start() {
-	envPort := os.Getenv("PORT")
-	port := tools.Ternary(len(envPort) == 0, "3000", envPort)
-	server.App.Logger.Fatal(server.App.Start(":" + port))
+	server.App.Logger.Fatal(server.App.Start(":" + config.CLIConfig.Port))
 }

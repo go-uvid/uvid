@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/rick-you/uvid/config"
 	"github.com/rick-you/uvid/dtos"
 	"github.com/rick-you/uvid/tools"
 
@@ -22,10 +23,13 @@ func bindDashApi(server Server) {
 		},
 		SigningKey: []byte(Configs["jwt_secret"]),
 		Skipper: func(c echo.Context) bool {
+			if config.CLIConfig.ReadonlyDash {
+				return true
+			}
 			return c.Path() == "/dash/user/login"
 		},
 	}
-	rg.Use(echojwt.WithConfig(config))
+	rg.Use(echojwt.WithConfig(config), ReadonlyMiddleware)
 
 	rg.POST("/user/login", api.loginUser)
 	rg.POST("/user/password", api.changeUserPassword)
@@ -48,6 +52,15 @@ func bindDashApi(server Server) {
 	rg.GET("/sessions", api.sessions)
 	rg.GET("/performances", api.avgPerformance)
 	rg.GET("/events/group", api.eventGroup)
+}
+
+func ReadonlyMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		if config.CLIConfig.ReadonlyDash && c.Request().Method == http.MethodPost {
+			return echo.ErrForbidden
+		}
+		return next(c)
+	}
 }
 
 type dashApi struct {
