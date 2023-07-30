@@ -64,7 +64,7 @@ export function Home() {
 
 	return (
 		<Layout>
-			<header className="sticky top-0 w-screen">
+			<header>
 				<div className="w-main m-auto flex items-center justify-between">
 					<h1 className="text-xl">{location.hostname}</h1>
 					<Select

@@ -28,8 +28,18 @@ export function GroupBarChart(props: {data?: IntervalData[]}) {
 				>
 					<XAxis type="number" hide />
 					<YAxis dataKey="x" type="category" hide />
-					<Bar dataKey="y" barSize={20} fill={Theme.color.primary}>
-						<LabelList dataKey="x" position="insideLeft" fill="#ffffff" />
+					<Bar
+						dataKey="y"
+						barSize={25}
+						fill={Theme.color.primaryBackground}
+						// Fix Some times text disappear, see https://github.com/recharts/recharts/issues/1426#issuecomment-501221315
+						isAnimationActive={false}
+					>
+						<LabelList
+							dataKey="x"
+							position="insideLeft"
+							fill={Theme.text.primary}
+						/>
 						<LabelList dataKey="y" position="right" />
 					</Bar>
 				</ComposedChart>
