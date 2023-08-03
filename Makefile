@@ -7,13 +7,12 @@ test-report:
 	go tool cover -html=coverage.out
 
 build:
-	cd js && pnpm --filter "uvid-js" --filter "dash" build
 	GOFLAGS=-mod=mod go build -o bin/uvid main.go
 
-run: 
+run:
 	gin --immediate run main.go
 
 publish-sdk:
-	cd js/packages/uvid-js && pnpm version patch && pnpm publish
+	cd js/packages/uvid-js && npm version patch && pnpm publish
 publish:
 	goreleaser release

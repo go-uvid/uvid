@@ -13,5 +13,9 @@
 			"path": "../js/packages/dash"
 		}
 	],
-	"settings": {}
+    "settings": {
+        "cSpell.words": [
+            "uvid"
+        ]
+    }
 }

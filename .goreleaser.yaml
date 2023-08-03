@@ -1,5 +1,3 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -38,8 +36,6 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
-gomod:
-  proxy: true
 # The lines beneath this are called `modelines`. See `:help modeline`
 # Feel free to remove those if you don't want/use them.
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json

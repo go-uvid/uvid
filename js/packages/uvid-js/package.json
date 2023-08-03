@@ -17,7 +17,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "test": "pnpm build && pnpm exec playwright test"
+    "test": "pnpm build && pnpm exec playwright test",
+    "prepublishOnly": "pnpm build && pnpm exec playwright test"
   },
   "devDependencies": {
     "@playwright/test": "^1.32.2",
