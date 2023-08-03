@@ -1,4 +1,4 @@
-module github.com/rick-you/uvid
+module github.com/go-uvid/uvid
 
 go 1.20
 

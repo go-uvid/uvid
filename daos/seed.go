@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/rick-you/uvid/models"
+	"github.com/go-uvid/uvid/models"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

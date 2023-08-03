@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
+	dash_embed "github.com/go-uvid/uvid/js"
 	"github.com/labstack/echo/v4/middleware"
-	dash_embed "github.com/rick-you/uvid/js"
 )
 
 func bindDashStatic(server Server) {

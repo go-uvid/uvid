@@ -3,7 +3,7 @@ package dtos
 import (
 	"time"
 
-	"github.com/rick-you/uvid/tools"
+	"github.com/go-uvid/uvid/tools"
 )
 
 type (

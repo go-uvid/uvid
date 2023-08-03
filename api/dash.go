@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/rick-you/uvid/config"
-	"github.com/rick-you/uvid/dtos"
-	"github.com/rick-you/uvid/tools"
+	"github.com/go-uvid/uvid/config"
+	"github.com/go-uvid/uvid/dtos"
+	"github.com/go-uvid/uvid/tools"
 
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"

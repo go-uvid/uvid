@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/rick-you/uvid/dtos"
+	"github.com/go-uvid/uvid/dtos"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"

@@ -5,7 +5,7 @@
   "scripts": {
     "test": "xo"
   },
-  "author": "https://github.com/rick-you",
+  "author": "https://github.com/go-uvid",
   "license": "ISC",
   "devDependencies": {
     "xo": "^0.54.0"

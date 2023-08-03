@@ -3,9 +3,9 @@ package api
 import (
 	"time"
 
-	"github.com/rick-you/uvid/config"
-	"github.com/rick-you/uvid/daos"
-	"github.com/rick-you/uvid/dtos"
+	"github.com/go-uvid/uvid/config"
+	"github.com/go-uvid/uvid/daos"
+	"github.com/go-uvid/uvid/dtos"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"

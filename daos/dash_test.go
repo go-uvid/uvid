@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rick-you/uvid/daos"
-	"github.com/rick-you/uvid/models"
-	"github.com/rick-you/uvid/tools"
+	"github.com/go-uvid/uvid/daos"
+	"github.com/go-uvid/uvid/models"
+	"github.com/go-uvid/uvid/tools"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"

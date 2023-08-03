@@ -56,8 +56,8 @@ See `LICENSE.txt` for more information.
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[stars-shield]: https://img.shields.io/github/stars/rick-you/uvid.svg?style=for-the-badge
-[stars-url]: https://github.com/rick-you/uvid/stargazers
-[license-shield]: https://img.shields.io/github/license/rick-you/uvid.svg?style=for-the-badge
-[license-url]: https://github.com/rick-you/uvid/blob/master/LICENSE.txt
-[issues-url]: https://github.com/rick-you/uvid/issues
+[stars-shield]: https://img.shields.io/github/stars/go-uvid/uvid.svg?style=for-the-badge
+[stars-url]: https://github.com/go-uvid/uvid/stargazers
+[license-shield]: https://img.shields.io/github/license/go-uvid/uvid.svg?style=for-the-badge
+[license-url]: https://github.com/go-uvid/uvid/blob/master/LICENSE.txt
+[issues-url]: https://github.com/go-uvid/uvid/issues
