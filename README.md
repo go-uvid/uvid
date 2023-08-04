@@ -17,7 +17,7 @@
     Observable Platform for Frontend Websites
     <br />
     <br />
-    <a href="https://uvid.deno.dev">View Demo</a>
+    <a href="https://uvid-demo.applet.ink/">View Demo</a>
     ·
     <a href="[issues-url]">Report Bug</a>
 ·
@@ -44,6 +44,8 @@ UVID can help you:
 - ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
 ## Documentation
+
+<https://uvid.applet.ink/>
 
 ## Contributing
 

@@ -24,7 +24,7 @@ export default defineConfig({
       import { init } from "https://www.unpkg.com/uvid-js?module";
       
       window.uvid = init({
-        host: "https://uvid.deno.dev",
+        host: "https://uvid-demo.applet.ink",
         sessionMeta: {
           from: "uvid-site",
         },

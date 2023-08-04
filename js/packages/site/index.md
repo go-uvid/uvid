@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Online Demo
-      link: https://uvid.deno.dev
+      link: https://uvid-demo.applet.ink
     - theme: alt
       text: Documentation
       link: /documentation
