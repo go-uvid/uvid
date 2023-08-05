@@ -19,17 +19,7 @@ export default defineConfig({
   head: [
     [
       "script",
-      { type: "module" },
-      `
-      import { init } from "https://www.unpkg.com/uvid-js?module";
-      
-      window.uvid = init({
-        host: "https://uvid-demo.applet.ink",
-        sessionMeta: {
-          from: "uvid-site",
-        },
-      });
-      `,
+      { type: "module", src: '/uvid.js' },
     ],
   ],
   ignoreDeadLinks: "localhostLinks",

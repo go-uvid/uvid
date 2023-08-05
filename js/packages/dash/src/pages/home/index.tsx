@@ -66,7 +66,7 @@ export function Home() {
 		<Layout>
 			<header>
 				<div className="w-main m-auto flex items-center justify-between">
-					<h1 className="text-xl">{location.hostname}</h1>
+					<h1 className="text-xl"></h1>
 					<Select
 						style={{width: 160}}
 						value={timeRange}
@@ -205,10 +205,10 @@ export function Home() {
 
 function ChartGroup({left, right}: {left: ReactNode; right: ReactNode}) {
 	return (
-		<Row gutter={30} className="w-main px-8">
+		<Row className="w-main px-6">
 			<Col span={11}>{left}</Col>
-			<Col span={2}>
-				<Divider type="vertical" style={{height: '100%'}} />
+			<Col span={2} className="flex items-center justify-center">
+				<Divider type="vertical" className="h-full" />
 			</Col>
 			<Col span={11}>{right}</Col>
 		</Row>
