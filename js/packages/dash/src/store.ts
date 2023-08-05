@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import {atom, useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {type TimeUnit} from './lib/api';
+import {setupDayjs} from './lib/dayjs';
 
 const [defaultStartTime, defaultEndTime, defaultTimeRange] = thisWeek();
 export const startTimeAtom = atom(defaultStartTime);
@@ -104,6 +105,7 @@ export type TimeRange =
 export type IntervalType = 'uv' | 'pv' | 'jsError' | 'httpError';
 
 function thisWeek(): [string, string, TimeRange] {
+	setupDayjs();
 	const now = dayjs();
 	return [
 		now.startOf('week').toISOString(),
