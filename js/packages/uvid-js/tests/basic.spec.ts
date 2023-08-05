@@ -1,5 +1,3 @@
-import process from 'node:process';
-import path from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {test, expect, type Page} from '@playwright/test';
 import {
@@ -8,12 +6,10 @@ import {
 	type PerformanceDTO,
 	type EventDTO,
 } from '../lib/types/span';
-import {serve} from './serve.js';
 
 const apiHost = 'http://localhost:3000';
 
-const publicPath = path.join(process.cwd());
-const pageUrl = `http://localhost:4000/tests/basic`;
+const pageUrl = `http://localhost:4000/basic.test`;
 
 type Data = {
 	url: string;
@@ -21,11 +17,7 @@ type Data = {
 };
 const actualData: Data[] = [];
 
-// Serve html page, since we cannot add cookie when using file protocol
-await serve(publicPath);
-
 test.beforeEach(async ({page}) => {
-	await page.goto(pageUrl);
 	await page.route(`${apiHost}/**/*`, async (route) => {
 		const postData = route.request().postData();
 		const url = route.request().url();
@@ -41,26 +33,26 @@ test.beforeEach(async ({page}) => {
 
 		if (route.request().url().includes('/span/session')) {
 			const uuid = randomUUID();
-			await page.evaluate((_uuid) => {
-				sessionStorage.setItem('X-UVID-Session', _uuid);
-			}, uuid);
+			await route.fulfill({body: uuid, status: 204});
+		} else {
+			await route.fulfill({
+				status: 204,
+			});
 		}
-
-		await route.fulfill({
-			status: 204,
-		});
 	});
+	// WARN route before goto page, otherwise we can't catch session request
+	await page.goto(pageUrl);
 });
 
 test('basic', async ({page}) => {
-	const referrer = await page.evaluate(() => document.referrer);
-	const language = await page.evaluate(() => navigator.language);
-	const screen = await page.evaluate(
-		() => `${window.screen.width}*${window.screen.height}`,
-	);
+	const {referrer, language, screen} = await page.evaluate(() => ({
+		referrer: document.referrer,
+		language: navigator.language,
+		screen: `${window.screen.width}*${window.screen.height}`,
+	}));
+	const url = page.url();
 
-	const button = await page.$('#fid');
-	await button?.click();
+	await page.locator('#fid').click();
 	await page.waitForRequest(`${apiHost}/span/performance`);
 
 	// Using globalThis.atob will cause error: TypeError: Cannot set property message of  which has only a getter
@@ -73,7 +65,6 @@ test('basic', async ({page}) => {
 		appVersion: '',
 	};
 
-	const url = await page.evaluate(() => window.location.href);
 	const firstLCP = await getPerformanceSpan(page, 'LCP');
 	const fid = await getPerformanceSpan(page, 'FID');
 	const errorMessage = 'test error';
@@ -95,8 +86,7 @@ test('basic', async ({page}) => {
 	};
 	// Test if session exist after reload
 	await page.reload();
-	const registerButton = await page.$('#register');
-	await registerButton?.click();
+	await page.locator('#register').click();
 	const secondLCP = await getPerformanceSpan(page, 'LCP');
 
 	const error: ErrorDTO = {
