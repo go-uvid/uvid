@@ -30,8 +30,8 @@ export function useTimeIntervalPayload() {
 }
 
 export function useTimeRange() {
-	const [, setStartTime] = useAtom(startTimeAtom);
-	const [, setEndTime] = useAtom(endTimeAtom);
+	const setStartTime = useSetAtom(startTimeAtom);
+	const setEndTime = useSetAtom(endTimeAtom);
 	const [timeRange, _setTimeRange] = useAtom(timeRangeAtom);
 	const setTimeUnit = useSetAtom(timeUnitAtom);
 
