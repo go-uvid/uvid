@@ -7,11 +7,19 @@ import {
 	LabelList,
 } from 'recharts';
 import {Empty} from 'antd';
+import {useMemo} from 'react';
+import {maxBy} from 'lodash-es';
 import {type IntervalData} from '../lib/api';
 import {Theme} from '../lib/theme';
+import {measureTextWidth} from '../lib/text';
 
 export function GroupBarChart(props: {data?: IntervalData[]}) {
 	const {data} = props;
+	const minPointSize = useMemo(() => {
+		const longestText = maxBy(data, 'x')?.x ?? '';
+		const width = measureTextWidth(longestText, '14px sans-serif') ?? 0;
+		return width + 30;
+	}, [data]);
 	return (
 		<ResponsiveContainer
 			width="100%"
@@ -34,6 +42,7 @@ export function GroupBarChart(props: {data?: IntervalData[]}) {
 						fill={Theme.color.primaryBackground}
 						// Fix Some times text disappear, see https://github.com/recharts/recharts/issues/1426#issuecomment-501221315
 						isAnimationActive={false}
+						minPointSize={minPointSize}
 					>
 						<LabelList
 							dataKey="x"
