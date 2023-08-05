@@ -14,7 +14,7 @@
 
   <p align="center">
     <br />
-    Observable Platform for Frontend Websites
+    Observable Platform for Your Websites
     <br />
     <br />
     <a href="https://uvid-demo.applet.ink/">View Demo</a>
