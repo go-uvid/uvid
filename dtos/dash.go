@@ -20,4 +20,11 @@ type (
 		X string  `json:"x" validate:"required"`
 		Y float64 `json:"y" validate:"required"`
 	}
+
+	CountDTO struct {
+		Pv        int64 `json:"pv" validate:"required"`
+		Uv        int64 `json:"uv" validate:"required"`
+		JsError   int64 `json:"jsError" validate:"required"`
+		HttpError int64 `json:"httpError" validate:"required"`
+	}
 )

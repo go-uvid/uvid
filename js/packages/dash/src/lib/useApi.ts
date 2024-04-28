@@ -15,14 +15,11 @@ import {
 	type TimeRangeDTO,
 	getAvgPerformance,
 	getErrorInterval,
-	getErrorCount,
 	getEventGroup,
 	getHttpErrorInterval,
-	getHttpErrorCount,
 	getPageViewInterval,
-	getPageViewCount,
 	getUniqueVisitorInterval,
-	getUniqueVisitorCount,
+	getMetricCount,
 	PerformanceName,
 	getPageViews,
 	getSessions,
@@ -115,32 +112,10 @@ export function useDevice() {
 	);
 }
 
-export function usePageViewCount() {
+export function useMetricCount() {
 	const {startTime, endTime} = useSpanFilterPayload();
-	return useRequest([ApiPath.getPageViewCount, startTime, endTime], async () =>
-		getPageViewCount({start: startTime, end: endTime}),
-	);
-}
-
-export function useUniqueVisitorCount() {
-	const {startTime, endTime} = useSpanFilterPayload();
-	return useRequest(
-		[ApiPath.getUniqueVisitorCount, startTime, endTime],
-		async () => getUniqueVisitorCount({start: startTime, end: endTime}),
-	);
-}
-
-export function useErrorCount() {
-	const {startTime, endTime} = useSpanFilterPayload();
-	return useRequest([ApiPath.getErrorCount, startTime, endTime], async () =>
-		getErrorCount({start: startTime, end: endTime}),
-	);
-}
-
-export function useHttpErrorCount() {
-	const {startTime, endTime} = useSpanFilterPayload();
-	return useRequest([ApiPath.getHttpErrorCount, startTime, endTime], async () =>
-		getHttpErrorCount({start: startTime, end: endTime}),
+	return useRequest([ApiPath.metricCount, startTime, endTime], async () =>
+		getMetricCount({start: startTime, end: endTime}),
 	);
 }
 
