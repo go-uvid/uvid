@@ -8,7 +8,6 @@ import (
 	"github.com/go-uvid/uvid/models"
 	"github.com/go-uvid/uvid/tools"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 )
@@ -86,14 +85,14 @@ func TestFindUniqueVisitorInterval(t *testing.T) {
 	startTime := truncateToday()
 	midTime := startTime.AddDate(0, 0, 1)
 	endTime := startTime.AddDate(0, 0, 3)
-	uuid1 := uuid.New()
-	uuid2 := uuid.New()
-	uuid3 := uuid.New()
-	db.Create(&models.PageView{URL: "", SessionUUID: uuid1, Model: gorm.Model{CreatedAt: startTime}})
-	db.Create(&models.PageView{URL: "", SessionUUID: uuid1, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour)}})
-	db.Create(&models.PageView{URL: "", SessionUUID: uuid2, Model: gorm.Model{CreatedAt: midTime}})
-	db.Create(&models.PageView{URL: "", SessionUUID: uuid3, Model: gorm.Model{CreatedAt: midTime}})
-	db.Create(&models.PageView{URL: "", SessionUUID: uuid3, Model: gorm.Model{CreatedAt: endTime}})
+	id1 := uint(1)
+	id2 := uint(2)
+	id3 := uint(3)
+	db.Create(&models.PageView{URL: "", SessionID: id1, Model: gorm.Model{CreatedAt: startTime}})
+	db.Create(&models.PageView{URL: "", SessionID: id1, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour)}})
+	db.Create(&models.PageView{URL: "", SessionID: id2, Model: gorm.Model{CreatedAt: midTime}})
+	db.Create(&models.PageView{URL: "", SessionID: id3, Model: gorm.Model{CreatedAt: midTime}})
+	db.Create(&models.PageView{URL: "", SessionID: id3, Model: gorm.Model{CreatedAt: endTime}})
 
 	// Test by finding the unique visitor interval for the last 2 hours
 	tr := dao.SpanFilter(startTime, endTime)
@@ -117,15 +116,15 @@ func TestFindEventInterval(t *testing.T) {
 	startTime := truncateToday()
 	midTime := startTime.AddDate(0, 0, 1)
 	endTime := startTime.AddDate(0, 0, 3)
-	uuid1 := uuid.New()
+	id1 := uint(1)
 	const registerAction = "register"
 	const loginAction = "login"
 
-	db.Create(&models.Event{Action: registerAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: startTime}})
-	db.Create(&models.Event{Action: registerAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour)}})
-	db.Create(&models.Event{Action: registerAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: midTime}})
-	db.Create(&models.Event{Action: loginAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: midTime}})
-	db.Create(&models.Event{Action: loginAction, SessionUUID: uuid1, Model: gorm.Model{CreatedAt: endTime}})
+	db.Create(&models.Event{Action: registerAction, SessionID: id1, Model: gorm.Model{CreatedAt: startTime}})
+	db.Create(&models.Event{Action: registerAction, SessionID: id1, Model: gorm.Model{CreatedAt: startTime.Add(time.Hour)}})
+	db.Create(&models.Event{Action: registerAction, SessionID: id1, Model: gorm.Model{CreatedAt: midTime}})
+	db.Create(&models.Event{Action: loginAction, SessionID: id1, Model: gorm.Model{CreatedAt: midTime}})
+	db.Create(&models.Event{Action: loginAction, SessionID: id1, Model: gorm.Model{CreatedAt: endTime}})
 
 	tr := dao.SpanFilter(startTime, endTime)
 	results, _ := dao.FindEventInterval(tr)
@@ -148,41 +147,41 @@ func TestFindJSErrorInterval(t *testing.T) {
 	startTime := truncateToday()
 	midTime := startTime.AddDate(0, 0, 1)
 	endTime := startTime.AddDate(0, 0, 3)
-	uuid1 := uuid.New()
+	id1 := uint(1)
 	db.Create(&models.JSError{
-		Name:        "error",
-		Message:     "Something went wrong",
-		Stack:       "Error: Something went wrong",
-		SessionUUID: uuid1,
-		Model:       gorm.Model{CreatedAt: startTime},
+		Name:      "error",
+		Message:   "Something went wrong",
+		Stack:     "Error: Something went wrong",
+		SessionID: id1,
+		Model:     gorm.Model{CreatedAt: startTime},
 	})
 	db.Create(&models.JSError{
-		Name:        "error",
-		Message:     "Something went wrong",
-		Stack:       "Error: Something went wrong",
-		SessionUUID: uuid1,
-		Model:       gorm.Model{CreatedAt: startTime.Add(time.Hour)},
+		Name:      "error",
+		Message:   "Something went wrong",
+		Stack:     "Error: Something went wrong",
+		SessionID: id1,
+		Model:     gorm.Model{CreatedAt: startTime.Add(time.Hour)},
 	})
 	db.Create(&models.JSError{
-		Name:        "error",
-		Message:     "Something went wrong",
-		Stack:       "Error: Something went wrong",
-		SessionUUID: uuid1,
-		Model:       gorm.Model{CreatedAt: midTime},
+		Name:      "error",
+		Message:   "Something went wrong",
+		Stack:     "Error: Something went wrong",
+		SessionID: id1,
+		Model:     gorm.Model{CreatedAt: midTime},
 	})
 	db.Create(&models.JSError{
-		Name:        "error",
-		Message:     "Something went wrong",
-		Stack:       "Error: Something went wrong",
-		SessionUUID: uuid1,
-		Model:       gorm.Model{CreatedAt: midTime},
+		Name:      "error",
+		Message:   "Something went wrong",
+		Stack:     "Error: Something went wrong",
+		SessionID: id1,
+		Model:     gorm.Model{CreatedAt: midTime},
 	})
 	db.Create(&models.JSError{
-		Name:        "error",
-		Message:     "Something went wrong",
-		Stack:       "Error: Something went wrong",
-		SessionUUID: uuid1,
-		Model:       gorm.Model{CreatedAt: endTime},
+		Name:      "error",
+		Message:   "Something went wrong",
+		Stack:     "Error: Something went wrong",
+		SessionID: id1,
+		Model:     gorm.Model{CreatedAt: endTime},
 	})
 
 	// Test by finding the unique visitor interval for the last 2 hours

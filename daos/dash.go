@@ -34,7 +34,7 @@ func unitToTimeFormat(unit tools.Unit) TimeFormat {
 	}
 }
 
-const DistinctSession = "DISTINCT session_uuid"
+const DistinctSession = "DISTINCT session_id"
 
 func isPageView(db *gorm.DB) *gorm.DB {
 	return db.Model(models.PageView{})
@@ -94,7 +94,7 @@ func (dao *Dao) FindUniqueVisitorInterval(db *gorm.DB, unit tools.Unit) ([]Inter
 func (dao *Dao) FindUniqueVisitorCount(db *gorm.DB) (int64, error) {
 	var count int64
 	err := db.Scopes(isPageView).
-		Distinct("session_uuid").
+		Distinct("session_id").
 		Count(&count).Error
 	return count, err
 }
@@ -168,31 +168,4 @@ func (dao *Dao) FindHTTPErrorInterval(db *gorm.DB, unit tools.Unit) ([]IntervalD
 		Order("x ASC").
 		Scan(&results).Error
 	return results, err
-}
-
-func (dao *Dao) GetUserByName(name string) (models.User, error) {
-	user := models.User{
-		Name: name,
-	}
-
-	if err := dao.DB.First(&user).Error; err != nil {
-		return user, err
-	}
-
-	return user, nil
-}
-
-func (dao *Dao) ChangeUserPassword(name string, currentPassword, newPassword string) error {
-	user := models.User{
-		Name: name,
-	}
-	dao.DB.Where("name = ?", user.Name).First(&user)
-	if err := tools.ComparePassword(user.Password, currentPassword); err != nil {
-		return err
-	}
-	hashPass, err := tools.HashPassword(newPassword)
-	if err != nil {
-		return err
-	}
-	return dao.DB.Model(&models.User{}).Where(user).Update("password", string(hashPass)).Error
 }

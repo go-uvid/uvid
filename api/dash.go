@@ -2,37 +2,15 @@ package api
 
 import (
 	"net/http"
-	"time"
 
-	"github.com/go-uvid/uvid/config"
 	"github.com/go-uvid/uvid/dtos"
-	"github.com/go-uvid/uvid/tools"
 
-	"github.com/golang-jwt/jwt/v5"
-	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 )
 
 func bindDashApi(server Server) {
 	api := &dashApi{server}
 	rg := server.App.Group("/dash")
-	// Configure middleware with the custom claims type
-	config := echojwt.Config{
-		NewClaimsFunc: func(c echo.Context) jwt.Claims {
-			return new(jwtCustomClaims)
-		},
-		SigningKey: []byte(Configs["jwt_secret"]),
-		Skipper: func(c echo.Context) bool {
-			if config.CLIConfig.ReadonlyDash {
-				return true
-			}
-			return c.Path() == "/dash/user/login"
-		},
-	}
-	rg.Use(echojwt.WithConfig(config), ReadonlyMiddleware)
-
-	rg.POST("/user/login", api.loginUser)
-	rg.POST("/user/password", api.changeUserPassword)
 
 	rg.GET("/pvs", api.pageviews)
 	rg.GET("/pvs/interval", api.pageviewInterval)
@@ -54,75 +32,8 @@ func bindDashApi(server Server) {
 	rg.GET("/events/group", api.eventGroup)
 }
 
-func ReadonlyMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		if config.CLIConfig.ReadonlyDash && c.Request().Method == http.MethodPost {
-			return echo.ErrForbidden
-		}
-		return next(c)
-	}
-}
-
 type dashApi struct {
 	Server
-}
-
-// jwtCustomClaims are custom claims extending default ones.
-// See https://github.com/golang-jwt/jwt for more examples
-type jwtCustomClaims struct {
-	Name string `json:"name"`
-	jwt.RegisteredClaims
-}
-
-func (api *dashApi) loginUser(c echo.Context) error {
-	body := &dtos.LoginDTO{}
-	if err := dtos.BindAndValidateDTO(c, body); err != nil {
-		return err
-	}
-
-	user, err := api.Dao.GetUserByName(body.Name)
-	if err != nil {
-		return echo.ErrBadRequest
-	}
-	// Throws unauthorized error
-	if err := tools.ComparePassword(user.Password, body.Password); err != nil {
-		return echo.ErrBadRequest
-	}
-
-	// Set custom claims
-	claims := &jwtCustomClaims{
-		body.Name,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
-		},
-	}
-
-	// Create token with claims
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Generate encoded token and send it as response.
-	t, err := token.SignedString([]byte(Configs["jwt_secret"]))
-	if err != nil {
-		return err
-	}
-
-	return c.JSON(http.StatusOK, echo.Map{
-		"token": t,
-	})
-}
-
-func (api *dashApi) changeUserPassword(c echo.Context) error {
-	body := &dtos.ChangePasswordDTO{}
-	if err := dtos.BindAndValidateDTO(c, body); err != nil {
-		return err
-	}
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*jwtCustomClaims)
-	name := claims.Name
-	if err := api.Dao.ChangeUserPassword(name, body.CurrentPassword, body.NewPassword); err != nil {
-		return err
-	}
-	return c.JSON(http.StatusOK, nil)
 }
 
 func (api *dashApi) pageviews(c echo.Context) error {

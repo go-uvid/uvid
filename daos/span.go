@@ -3,8 +3,6 @@ package daos
 import (
 	"github.com/go-uvid/uvid/dtos"
 	"github.com/go-uvid/uvid/models"
-
-	"github.com/google/uuid"
 )
 
 func (dao *Dao) CreateSession(dto *dtos.SessionDTO) (*models.Session, error) {
@@ -17,63 +15,62 @@ func (dao *Dao) CreateSession(dto *dtos.SessionDTO) (*models.Session, error) {
 		Screen:     dto.Screen,
 		Referrer:   dto.Referrer,
 		Meta:       dto.Meta,
-		UUID:       uuid.New(),
 	}
 	err := dao.DB.Create(&model).Error
 	return &model, err
 }
 
-func (dao *Dao) CreateJSError(sessionUUID uuid.UUID, dto *dtos.ErrorDTO) (*models.JSError, error) {
+func (dao *Dao) CreateJSError(sessionID uint, dto *dtos.ErrorDTO) (*models.JSError, error) {
 	model := models.JSError{
-		SessionUUID: sessionUUID,
-		Name:        dto.Name,
-		Message:     dto.Message,
-		Stack:       dto.Stack,
-		Cause:       dto.Cause,
+		SessionID: sessionID,
+		Name:      dto.Name,
+		Message:   dto.Message,
+		Stack:     dto.Stack,
+		Cause:     dto.Cause,
 	}
 	err := dao.DB.Create(&model).Error
 	return &model, err
 }
 
-func (dao *Dao) CreateEvent(sessionUUID uuid.UUID, dto *dtos.EventDTO) (*models.Event, error) {
+func (dao *Dao) CreateEvent(sessionID uint, dto *dtos.EventDTO) (*models.Event, error) {
 	model := models.Event{
-		SessionUUID: sessionUUID,
-		Action:      dto.Action,
-		Value:       dto.Value,
+		SessionID: sessionID,
+		Action:    dto.Action,
+		Value:     dto.Value,
 	}
 	err := dao.DB.Create(&model).Error
 	return &model, err
 }
 
-func (dao *Dao) CreatePerformance(sessionUUID uuid.UUID, dto *dtos.PerformanceDTO) (*models.Performance, error) {
+func (dao *Dao) CreatePerformance(sessionID uint, dto *dtos.PerformanceDTO) (*models.Performance, error) {
 	model := models.Performance{
-		SessionUUID: sessionUUID,
-		Name:        dto.Name,
-		Value:       dto.Value,
-		URL:         dto.URL,
+		SessionID: sessionID,
+		Name:      dto.Name,
+		Value:     dto.Value,
+		URL:       dto.URL,
 	}
 	err := dao.DB.Create(&model).Error
 	return &model, err
 }
 
-func (dao *Dao) CreateHTTP(sessionUUID uuid.UUID, dto *dtos.HTTPDTO) (*models.HTTP, error) {
+func (dao *Dao) CreateHTTP(sessionID uint, dto *dtos.HTTPDTO) (*models.HTTP, error) {
 	model := models.HTTP{
-		SessionUUID: sessionUUID,
-		Resource:    dto.Resource,
-		Method:      dto.Method,
-		Headers:     dto.Headers,
-		Status:      dto.Status,
-		Body:        dto.Body,
-		Response:    dto.Response,
+		SessionID: sessionID,
+		Resource:  dto.Resource,
+		Method:    dto.Method,
+		Headers:   dto.Headers,
+		Status:    dto.Status,
+		Body:      dto.Body,
+		Response:  dto.Response,
 	}
 	err := dao.DB.Create(&model).Error
 	return &model, err
 }
 
-func (dao *Dao) CreatePageView(sessionUUID uuid.UUID, dto *dtos.PageViewDTO) (*models.PageView, error) {
+func (dao *Dao) CreatePageView(sessionID uint, dto *dtos.PageViewDTO) (*models.PageView, error) {
 	model := models.PageView{
-		SessionUUID: sessionUUID,
-		URL:         dto.URL,
+		SessionID: sessionID,
+		URL:       dto.URL,
 	}
 	err := dao.DB.Create(&model).Error
 	return &model, err

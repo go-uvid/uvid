@@ -25,14 +25,6 @@ func New(dsn string) Server {
 		Dao: daos.New(dsn),
 	}
 	// daos.Seed(dsn)
-	err := server.Dao.InitializeDB()
-	if err != nil {
-		panic(err)
-	}
-	Configs, err = server.Dao.GetAllConfigs()
-	if err != nil {
-		panic(err)
-	}
 
 	server.App.Validator = &dtos.CustomValidator{Validator: validator.New()}
 

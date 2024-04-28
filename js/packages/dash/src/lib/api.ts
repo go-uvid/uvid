@@ -1,4 +1,4 @@
-import {AUTH_TOKEN_KEY, baseRequest, get, goLogin, post} from './request';
+import {get} from './request';
 
 type SpanFilter = {
 	start: string;
@@ -34,7 +34,6 @@ type SessionDTO = {
 } & BaseSessionDTO;
 
 export enum ApiPath {
-	changeUserPassword = '/dash/user/password',
 	getPageViews = '/dash/pvs',
 	getPageViewInterval = '/dash/pvs/interval',
 	getPageViewCount = '/dash/pvs/count',
@@ -47,31 +46,6 @@ export enum ApiPath {
 	getAvgPerformance = '/dash/performances',
 	getEventGroup = '/dash/events/group',
 	getSessions = '/dash/sessions',
-}
-
-export type ChangePasswordPayload = {
-	currentPassword: string;
-	newPassword: string;
-};
-
-export async function login(name: string, password: string) {
-	return baseRequest<{token: string}>(
-		'post',
-		'/dash/user/login',
-		JSON.stringify({name, password}),
-	).then((response) => {
-		const {token} = response.data;
-		localStorage.setItem(AUTH_TOKEN_KEY, token);
-	});
-}
-
-export function logout() {
-	localStorage.removeItem(AUTH_TOKEN_KEY);
-	void goLogin();
-}
-
-export async function changeUserPassword(data: ChangePasswordPayload) {
-	return post<void>(ApiPath.changeUserPassword, data);
 }
 
 type PageViewItem = {

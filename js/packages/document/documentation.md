@@ -21,8 +21,7 @@ Makes sure you have golang installed
    ```
 
 3. Open dashboard with `YOUR_SERVER_IP/:3000`, or <http://localhost:3000> if you installed locally
-4. Login to dashboard, default user name is `root`, password is `uvid`
-5. That's all. `./uvid.db` is sqlite database stores all your data
+4. That's all. `./uvid.db` is sqlite database stores all your data
 
 ## Usage
 

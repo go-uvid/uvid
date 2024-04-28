@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-uvid/uvid/models"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -37,7 +36,6 @@ func Seed(dsn string) {
 			Referrer:   getRandomDomain(),
 			Meta:       "{}",
 			Model:      gorm.Model{CreatedAt: getRandomTime(7)},
-			UUID:       uuid.New(),
 		}
 		if err := db.Create(&session).Error; err != nil {
 			panic(err)
@@ -45,22 +43,20 @@ func Seed(dsn string) {
 
 		for j := 0; j < size; j++ {
 			perfMetric := models.PageView{
-				URL:         getRandomPath(),
-				SessionUUID: session.UUID,
-				Session:     session,
-				Model:       gorm.Model{CreatedAt: getRandomTime(7)},
+				URL:       getRandomPath(),
+				Model:     gorm.Model{CreatedAt: getRandomTime(7)},
+				SessionID: session.ID,
 			}
 			db.Create(&perfMetric)
 		}
 
 		for j := 0; j < size; j++ {
 			perfMetric := models.Performance{
-				Name:        getRandomPerfName(),
-				Value:       getRandomPerfValue(),
-				URL:         getRandomPath(),
-				SessionUUID: session.UUID,
-				Session:     session,
-				Model:       gorm.Model{CreatedAt: getRandomTime(7)},
+				Name:      getRandomPerfName(),
+				Value:     getRandomPerfValue(),
+				URL:       getRandomPath(),
+				SessionID: session.ID,
+				Model:     gorm.Model{CreatedAt: getRandomTime(7)},
 			}
 			db.Create(&perfMetric)
 		}
@@ -68,12 +64,11 @@ func Seed(dsn string) {
 		// Generate 200 JSError records for this session
 		for j := 0; j < size; j++ {
 			error := &models.JSError{
-				Name:        "error",
-				Message:     "Something went wrong",
-				Stack:       "Error: Something went wrong",
-				SessionUUID: session.UUID,
-				Session:     session,
-				Model:       gorm.Model{CreatedAt: getRandomTime(7)},
+				Name:      "error",
+				Message:   "Something went wrong",
+				Stack:     "Error: Something went wrong",
+				SessionID: session.ID,
+				Model:     gorm.Model{CreatedAt: getRandomTime(7)},
 			}
 			db.Create(&error)
 		}
@@ -81,13 +76,12 @@ func Seed(dsn string) {
 		// Generate 200 HTTPMetric records for this session
 		for j := 0; j < size; j++ {
 			metric := &models.HTTP{
-				Resource:    getRandomDomain(),
-				Method:      randomHttpMethod(),
-				Headers:     "Content-Type: text/html",
-				Status:      rand.Intn(400) + 100,
-				SessionUUID: session.UUID,
-				Session:     session,
-				Model:       gorm.Model{CreatedAt: getRandomTime(7)},
+				Resource:  getRandomDomain(),
+				Method:    randomHttpMethod(),
+				Headers:   "Content-Type: text/html",
+				Status:    rand.Intn(400) + 100,
+				SessionID: session.ID,
+				Model:     gorm.Model{CreatedAt: getRandomTime(7)},
 			}
 			db.Create(&metric)
 		}
@@ -95,11 +89,10 @@ func Seed(dsn string) {
 		// Generate 200 Event records for this session
 		for j := 0; j < size; j++ {
 			event := &models.Event{
-				Action:      randomEventAction(),
-				Value:       "",
-				SessionUUID: session.UUID,
-				Session:     session,
-				Model:       gorm.Model{CreatedAt: getRandomTime(7)},
+				Action:    randomEventAction(),
+				Value:     "",
+				SessionID: session.ID,
+				Model:     gorm.Model{CreatedAt: getRandomTime(7)},
 			}
 			db.Create(&event)
 		}

@@ -1,12 +1,4 @@
-import {message} from 'antd';
 import {buildUrl} from './url';
-
-export const AUTH_TOKEN_KEY = 'uvid-auth-token';
-
-function getAuthorization() {
-	const token = localStorage.getItem(AUTH_TOKEN_KEY);
-	return token ? `Bearer ${token}` : '';
-}
 
 export class RequestError extends Error {
 	constructor(public message: string, public status: number) {
@@ -15,25 +7,6 @@ export class RequestError extends Error {
 }
 
 const host = import.meta.env.DEV ? 'http://localhost:3000' : '';
-
-function singletonPromiseFn<T>(fn: () => Promise<T>) {
-	let promise: Promise<T> | undefined;
-	return async () => {
-		if (!promise) {
-			promise = fn().then((result) => {
-				promise = undefined;
-				return result;
-			});
-		}
-
-		return promise;
-	};
-}
-
-export const goLogin = singletonPromiseFn(async () => {
-	await message.warning('Please login');
-	location.pathname = '/login';
-});
 
 export async function baseRequest<T = any>(
 	method: string,
@@ -67,21 +40,10 @@ export async function apiRequest<T = any>(
 	body?: string,
 	headers?: Record<string, unknown>,
 ): Promise<{ok: boolean; status: number; data: T}> {
-	const authHeader = getAuthorization();
-
-	try {
-		const response = await baseRequest<T>(method, url, body, {
-			...headers,
-			Authorization: authHeader,
-		});
-		return response;
-	} catch (error: unknown) {
-		if (error instanceof RequestError && error.status === 401) {
-			await goLogin();
-		}
-
-		throw error;
-	}
+	const response = await baseRequest<T>(method, url, body, {
+		...headers,
+	});
+	return response;
 }
 
 export async function get<T>(

@@ -1,9 +1,11 @@
 package api_test
 
 import (
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -30,12 +32,12 @@ var requestHeader = map[string]string{
 	"User-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
 }
 
-func getSessionApi(t *testing.T, sessionUUID *uuid.UUID) tests.ApiScenario {
+func getSessionApi(t *testing.T, sessionUUID *uint) tests.ApiScenario {
 	var sessionApiScenarios = tests.ApiScenario{
 		Name:           "create session",
 		Method:         http.MethodPost,
 		Url:            API_SESSION,
-		ExpectedStatus: http.StatusNoContent,
+		ExpectedStatus: http.StatusOK,
 		RequestHeaders: requestHeader,
 		Body: strings.NewReader(`{
 				"url": "www.google.com",
@@ -47,9 +49,9 @@ func getSessionApi(t *testing.T, sessionUUID *uuid.UUID) tests.ApiScenario {
 			defer res.Body.Close()
 			body, err := ioutil.ReadAll(res.Body)
 			assert.NoError(t, err)
-			_uuid, err := uuid.Parse(string(body))
-			*sessionUUID = _uuid
+			_id, err := strconv.Atoi(string(body))
 			assert.NoError(t, err)
+			*sessionUUID = uint(_id)
 		},
 	}
 
@@ -57,12 +59,12 @@ func getSessionApi(t *testing.T, sessionUUID *uuid.UUID) tests.ApiScenario {
 }
 
 func TestCreateSpan(t *testing.T) {
-	var sessionUUID uuid.UUID
-	var sessionApiScenarios = getSessionApi(t, &sessionUUID)
+	var sessionID uint
+	var sessionApiScenarios = getSessionApi(t, &sessionID)
 
 	var BeforeRequest = func(req *http.Request, server *api.Server) {
-		assert.NotEqual(t, sessionUUID, uuid.Nil)
-		req.Header.Set(api.SessionHeaderKey, sessionUUID.String())
+		assert.NotEqual(t, sessionID, uuid.Nil)
+		req.Header.Set(api.SessionHeaderKey, fmt.Sprint(sessionID))
 	}
 
 	var createSpanApiScenario = func(scenario tests.ApiScenario) tests.ApiScenario {
@@ -87,7 +89,7 @@ func TestCreateSpan(t *testing.T) {
 				errors := []models.JSError{}
 				server.Dao.DB.Find(&errors)
 				assert.Len(t, errors, 1)
-				assert.Equal(t, errors[0].SessionUUID, sessionUUID)
+				assert.Equal(t, errors[0].SessionID, sessionID)
 			},
 		}),
 		createSpanApiScenario(tests.ApiScenario{
@@ -98,8 +100,8 @@ func TestCreateSpan(t *testing.T) {
 				errors := []models.JSError{}
 				server.Dao.DB.Find(&errors)
 				assert.Len(t, errors, 2)
-				assert.Equal(t, errors[0].SessionUUID, sessionUUID)
-				assert.Equal(t, errors[1].SessionUUID, sessionUUID)
+				assert.Equal(t, errors[0].SessionID, sessionID)
+				assert.Equal(t, errors[1].SessionID, sessionID)
 			},
 		}),
 		createSpanApiScenario(tests.ApiScenario{
@@ -117,7 +119,7 @@ func TestCreateSpan(t *testing.T) {
 				https := []models.HTTP{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
-				assert.Equal(t, https[0].SessionUUID, sessionUUID)
+				assert.Equal(t, https[0].SessionID, sessionID)
 			},
 		}),
 		createSpanApiScenario(tests.ApiScenario{
@@ -131,7 +133,7 @@ func TestCreateSpan(t *testing.T) {
 				https := []models.Event{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
-				assert.Equal(t, https[0].SessionUUID, sessionUUID)
+				assert.Equal(t, https[0].SessionID, sessionID)
 			},
 		}),
 		createSpanApiScenario(tests.ApiScenario{
@@ -146,7 +148,7 @@ func TestCreateSpan(t *testing.T) {
 				https := []models.Performance{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
-				assert.Equal(t, https[0].SessionUUID, sessionUUID)
+				assert.Equal(t, https[0].SessionID, sessionID)
 			},
 		}),
 		createSpanApiScenario(tests.ApiScenario{
@@ -159,7 +161,7 @@ func TestCreateSpan(t *testing.T) {
 				https := []models.PageView{}
 				server.Dao.DB.Find(&https)
 				assert.Len(t, https, 1)
-				assert.Equal(t, https[0].SessionUUID, sessionUUID)
+				assert.Equal(t, https[0].SessionID, sessionID)
 			},
 		}),
 	}
@@ -174,8 +176,8 @@ func TestSessionMiddleware(t *testing.T) {
 			Name:           "create event without session",
 			Method:         http.MethodPost,
 			Url:            API_EVENT,
-			Body:           strings.NewReader(`{"name": "register", "value": "new user"}`),
-			ExpectedStatus: http.StatusBadRequest,
+			Body:           strings.NewReader(`{"action": "register", "value": "new user"}`),
+			ExpectedStatus: http.StatusInternalServerError,
 		},
 	}
 

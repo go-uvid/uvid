@@ -7,14 +7,6 @@ import (
 )
 
 type (
-	LoginDTO struct {
-		Name     string `json:"name" validate:"required"`
-		Password string `json:"password" validate:"required"`
-	}
-	ChangePasswordDTO struct {
-		CurrentPassword string `json:"currentPassword" validate:"required"`
-		NewPassword     string `json:"newPassword" validate:"required"`
-	}
 	SpanFilterDTO struct {
 		Start time.Time `query:"start" validate:"required"`
 		End   time.Time `query:"end" validate:"required"`
