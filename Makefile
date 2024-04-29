@@ -7,7 +7,7 @@ test-report:
 	go tool cover -html=coverage.out
 
 build:
-	GOFLAGS=-mod=mod go build -o bin/uvid main.go
+	GOFLAGS=-mod=mod go build
 
 run:
 	gin --immediate run main.go

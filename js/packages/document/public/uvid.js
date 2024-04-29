@@ -5,7 +5,7 @@ import {init} from 'https://www.unpkg.com/uvid-js?module';
 const _init = init;
 
 const uvid = _init({
-	host: 'https://uvid-demo.applet.ink',
+	host: 'https://uvid.fly.dev',
 	sessionMeta: {
 		from: 'uvid-site',
 	},

@@ -20,7 +20,7 @@ Makes sure you have golang installed
    go/bin/uvid
    ```
 
-3. Open dashboard with `YOUR_SERVER_IP/:3000`, or <http://localhost:3000> if you installed locally
+3. Open dashboard with `YOUR_SERVER_IP/:8080`, or <http://localhost:8080> if you installed locally
 4. That's all. `./uvid.db` is sqlite database stores all your data
 
 ## Usage
@@ -39,7 +39,7 @@ npm install uvid-js
 import { init } from "uvid-js";
 
 const sdk = init({
-  host: "YOUR_SERVER_IP/:3000",
+  host: "YOUR_SERVER_IP/:8080",
   sessionMeta: {
     // optionally, track additional meta data
     userId: "123",

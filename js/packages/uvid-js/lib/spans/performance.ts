@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import {onLCP, onFID, onCLS, type Metric} from 'web-vitals';
 import {request} from '../session';
 import {type PerformanceDTO} from '../types/span';

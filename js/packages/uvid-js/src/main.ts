@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import {init} from '../lib/main';
 
 const sdk = init({

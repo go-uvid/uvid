@@ -11,7 +11,7 @@ type Config struct {
 
 func newConfig() Config {
 	config := Config{
-		Port: "3000",
+		Port: "8080",
 	}
 	envPort := os.Getenv("PORT")
 	_, ReadonlyDash := os.LookupEnv("READONLY_DASH")
