@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	dash_embed "github.com/go-uvid/uvid/js"
+	dash_embed "github.com/go-uvid/uvid/packages"
 	"github.com/labstack/echo/v4/middleware"
 )
 

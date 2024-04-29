@@ -1,21 +1,19 @@
 {
-	"folders": [
-		{
-			"path": ".."
-		},
-		{
-			"path": "../js/packages/uvid-js"
-		},
-		{
-			"path": "../js/packages/document"
-		},
-		{
-			"path": "../js/packages/dash"
-		}
-	],
-    "settings": {
-        "cSpell.words": [
-            "uvid"
-        ]
+  "folders": [
+    {
+      "path": ".."
+    },
+    {
+      "path": "../packages/uvid-js"
+    },
+    {
+      "path": "../packages/document"
+    },
+    {
+      "path": "../packages/dash"
     }
+  ],
+  "settings": {
+    "cSpell.words": ["uvid"]
+  }
 }

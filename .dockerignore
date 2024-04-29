@@ -34,7 +34,7 @@
 **/dist
 **/dist-ssr
 **/*.local
-!js/packages/dash/dist
+!packages/dash/dist
 
 # Editor directories and files
 !**/.vscode/extensions.json
@@ -50,6 +50,6 @@
 **/playwright-report
 **/playwright/.cache
 
-# flyctl launch added from js/node_modules/.pnpm/tailwindcss@3.3.1_postcss@8.4.21/node_modules/tailwindcss/stubs/.gitignore
-!js/node_modules/.pnpm/tailwindcss@3.3.1_postcss@8.4.21/node_modules/tailwindcss/stubs/**/*
+# flyctl launch added from node_modules/.pnpm/tailwindcss@3.3.1_postcss@8.4.21/node_modules/tailwindcss/stubs/.gitignore
+!node_modules/.pnpm/tailwindcss@3.3.1_postcss@8.4.21/node_modules/tailwindcss/stubs/**/*
 fly.toml

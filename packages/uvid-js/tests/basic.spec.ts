@@ -3,14 +3,14 @@ import { test, expect } from "@playwright/test";
 import { type EventDTO } from "../lib/types/span";
 
 const apiHost = "http://localhost:3000";
-enum SpanEndPoint {
-  session = `${apiHost}/span/session`,
-  error = `${apiHost}/span/error`,
-  http = `${apiHost}/span/http`,
-  event = `${apiHost}/span/event`,
-  performance = `${apiHost}/span/performance`,
-  pageView = `${apiHost}/span/pageview`,
-}
+const SpanEndPoint = {
+  session: `${apiHost}/span/session`,
+  error: `${apiHost}/span/error`,
+  http: `${apiHost}/span/http`,
+  event: `${apiHost}/span/event`,
+  performance: `${apiHost}/span/performance`,
+  pageView: `${apiHost}/span/pageview`,
+};
 
 const testPageURL = `http://localhost:4000/tests/test`;
 

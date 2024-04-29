@@ -34,7 +34,7 @@ cache
 dist
 dist-ssr
 *.local
-!/js/packages/dash/dist
+!/packages/dash/dist
 
 # Editor directories and files
 !.vscode/extensions.json

@@ -7,7 +7,7 @@
 <br />
 <div align="center">
   <a href="[repo-url]">
-    <img src="js/packages/site/public/logo.svg" alt="Logo" width="80" height="80">
+    <img src="packages/site/public/logo.svg" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">UVID</h3>
