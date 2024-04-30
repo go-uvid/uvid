@@ -3,7 +3,7 @@ package daos
 import (
 	"time"
 
-	"github.com/go-uvid/uvid/models"
+	"github.com/rick-you/uvid/models"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"

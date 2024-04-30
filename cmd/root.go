@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/go-uvid/uvid/api"
+	"github.com/rick-you/uvid/api"
 
 	"github.com/spf13/cobra"
 )

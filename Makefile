@@ -13,8 +13,5 @@ build:
 run:
 	gin --immediate run main.go
 
-publish-sdk:
-	pnpm --filter "uvid-js" exec npm version patch && pnpm --filter "uvid-js" publish
-	
-publish:
+release:
 	goreleaser release --clean

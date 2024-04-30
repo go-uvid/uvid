@@ -9,11 +9,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-uvid/uvid/api"
-	"github.com/go-uvid/uvid/dtos"
-	"github.com/go-uvid/uvid/models"
-	"github.com/go-uvid/uvid/tests"
-	"github.com/go-uvid/uvid/tools"
+	"github.com/rick-you/uvid/api"
+	"github.com/rick-you/uvid/dtos"
+	"github.com/rick-you/uvid/models"
+	"github.com/rick-you/uvid/tests"
+	"github.com/rick-you/uvid/tools"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"

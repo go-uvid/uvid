@@ -1,12 +1,10 @@
-module github.com/go-uvid/uvid
+module github.com/rick-you/uvid
 
 go 1.20
 
 require (
 	github.com/go-playground/validator v9.31.0+incompatible
-	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/google/uuid v1.3.0
-	github.com/labstack/echo-jwt/v4 v4.2.0
 	github.com/labstack/echo/v4 v4.11.1
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
@@ -38,5 +36,4 @@ require (
 	golang.org/x/time v0.3.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	zgo.at/isbot v1.0.0
 )

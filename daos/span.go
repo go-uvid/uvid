@@ -1,8 +1,8 @@
 package daos
 
 import (
-	"github.com/go-uvid/uvid/dtos"
-	"github.com/go-uvid/uvid/models"
+	"github.com/rick-you/uvid/dtos"
+	"github.com/rick-you/uvid/models"
 )
 
 func (dao *Dao) CreateSession(dto *dtos.SessionDTO) (*models.Session, error) {

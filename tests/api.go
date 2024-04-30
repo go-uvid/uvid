@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-uvid/uvid/api"
+	"github.com/rick-you/uvid/api"
 
 	"github.com/labstack/echo/v4"
 )

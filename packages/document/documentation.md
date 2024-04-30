@@ -11,7 +11,7 @@ Makes sure you have golang installed
 1. Install server
 
    ```sh
-   go install github.com/go-uvid/uvid@latest
+   go install github.com/rick-you/uvid@latest
    ```
 
 2. Run server
