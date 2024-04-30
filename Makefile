@@ -1,5 +1,5 @@
 test:
-	pnpm --filter "uvid-js" test
+	pnpm --filter "./packages/**" test
 	go test ./... -v --cover
 
 test-report:
@@ -7,13 +7,14 @@ test-report:
 	go tool cover -html=coverage.out
 
 build:
-	pnpm --filter "*" build
+	pnpm --filter "./packages/**" build
 	GOFLAGS=-mod=mod go build
 
 run:
 	gin --immediate run main.go
 
 publish-sdk:
-	cd packages/uvid-js && npm version patch && pnpm publish
+	pnpm --filter "uvid-js" exec npm version patch && pnpm --filter "uvid-js" publish
+	
 publish:
 	goreleaser release --clean
